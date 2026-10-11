@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>@NANDOPESSOAL — Buscador de Ofertas</title>
+<style>
+:root{--bg:#07090a;--bg2:#0e1214;--card:#12171a;--line:#1f272b;--tx:#f4f7f5;--mu:#8a979a;--g:#39ff14;--gd:rgba(57,255,20,.12);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#07090a}}
+:root[data-theme="light"]{--bg:#07090a}
+*{box-sizing:border-box;margin:0}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{background:var(--bg);color:var(--tx);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh;background-image:radial-gradient(600px 300px at 50% -50px,rgba(57,255,20,.13),transparent)}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:rgba(7,9,10,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.logo{font-weight:800;letter-spacing:.5px;font-size:18px;cursor:pointer;border:0;background:none;color:var(--tx)}
+.logo b{color:var(--g);text-shadow:0 0 12px rgba(57,255,20,.6)}
+.tag{font-size:11px;color:var(--g);border:1px solid var(--g);border-radius:99px;padding:3px 9px}
+main{max-width:980px;margin:0 auto;padding:18px 16px 110px}
+.page{display:none}.page.on{display:block}
+h1{font-size:clamp(26px,7vw,44px);line-height:1.12;text-align:center;margin:22px 0 10px;letter-spacing:-.5px}
+h1 span{color:var(--g)}
+.sub{text-align:center;color:var(--mu);font-size:14px;max-width:520px;margin:0 auto 22px}
+h2{font-size:20px;margin-bottom:4px}
+.pg-sub{color:var(--mu);font-size:13px;margin-bottom:16px}
+.search{display:flex;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:8px;max-width:640px;margin:0 auto;box-shadow:0 0 0 1px var(--gd),0 10px 40px rgba(57,255,20,.07)}
+.search input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--tx);font-size:16px;padding:10px 8px}
+.btn{background:var(--g);color:#031004;border:0;border-radius:12px;font-weight:700;padding:11px 16px;font-size:14px;cursor:pointer}
+.btn.o{background:none;color:var(--g);border:1px solid var(--g)}
+.btn.s{padding:8px 12px;font-size:13px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:14px 0;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--bg2);color:var(--tx);border-radius:99px;padding:8px 14px;font-size:13px;cursor:pointer}
+.chip.on{background:var(--gd);border-color:var(--g);color:var(--g)}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin:14px 0 22px}
+.stat,.panel,.ad{background:var(--card);border:1px solid var(--line);border-radius:16px}
+.stat{padding:14px}.stat small{color:var(--mu);font-size:12px}.stat div{font-size:22px;font-weight:800;margin-top:4px}
+.panel{padding:16px;margin-bottom:12px}
+.steps{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.step{border:1px dashed var(--line);border-radius:12px;padding:12px;font-size:13px;color:var(--mu)}
+.step b{display:block;color:var(--g);margin-bottom:4px;font-size:14px}
+.ads{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.ad{overflow:hidden;display:flex;flex-direction:column}
+.ph{aspect-ratio:16/10;background:repeating-linear-gradient(45deg,#0e1315,#0e1315 10px,#11181b 10px,#11181b 20px);display:grid;place-items:center;color:var(--mu);font-size:12px;border-bottom:1px solid var(--line)}
+.ab{padding:14px;display:flex;flex-direction:column;gap:8px;flex:1}
+.sk{height:11px;border-radius:6px;background:var(--line)}
+.meta{font-size:12px;color:var(--mu);display:flex;justify-content:space-between}
+.meta b{color:var(--tx);font-weight:600}
+.ab .row{display:flex;gap:8px;margin-top:auto}
+.ab .btn{flex:1}
+.ic{background:var(--bg2);border:1px solid var(--line);color:var(--g);border-radius:12px;width:42px;cursor:pointer;font-size:16px}
+.empty{text-align:center;color:var(--mu);border:1px dashed var(--line);border-radius:16px;padding:36px 16px;font-size:14px}
+.empty b{display:block;color:var(--tx);font-size:16px;margin-bottom:6px}
+.field{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--line);font-size:14px;gap:10px}
+.field:last-child{border:0}.field small{display:block;color:var(--mu);font-size:12px}
+.sw{width:44px;height:24px;border-radius:99px;background:var(--line);position:relative;flex:none;cursor:pointer;border:0}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.2s}
+.sw.on{background:var(--g)}.sw.on::after{left:23px;background:#031004}
+select,.inp{background:var(--bg2);color:var(--tx);border:1px solid var(--line);border-radius:10px;padding:9px;font-size:14px;max-width:48%}
+.badge{font-size:11px;color:var(--mu);border:1px solid var(--line);border-radius:99px;padding:3px 8px}
+nav{position:fixed;bottom:0;left:0;right:0;z-index:6;display:flex;justify-content:space-around;background:rgba(10,13,14,.96);backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px))}
+nav button{flex:1;background:none;border:0;color:var(--mu);font-size:10.5px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;cursor:pointer}
+nav button i{font-style:normal;font-size:19px}
+nav button.on{color:var(--g)}nav button.on i{text-shadow:0 0 10px var(--g)}
+.hist{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px 0;border-bottom:1px solid var(--line);font-size:14px}
+.hist:last-child{border:0}
+.sec{display:flex;align-items:center;justify-content:space-between;margin:20px 0 10px}
+.sec h3{font-size:15px}
+.note{font-size:12px;color:var(--mu);text-align:center;margin-top:18px}
+.btn{text-decoration:none;display:inline-flex;align-items:center;justify-content:center;text-align:center}
+.filters{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));margin-top:6px}
+.filters label{font-size:11px;color:var(--mu);display:flex;flex-direction:column;gap:5px}
+.filters select{max-width:100%;width:100%}
+.err{color:#ff8a8a;border:1px solid #5a2323;background:#1c0e0e;border-radius:12px;padding:12px;font-size:13px;margin-top:12px}
+.sk2{animation:pl 1.2s ease-in-out infinite}
+@keyframes pl{50%{opacity:.35}}
+.empty .btn{margin-top:14px}
+.hs{display:flex;overflow-x:auto;gap:12px;padding-bottom:6px}.hs .ad{min-width:260px;max-width:300px;flex:none}
+#cmpbar{display:none;position:fixed;left:12px;right:12px;bottom:calc(68px + env(safe-area-inset-bottom,0px));z-index:7;align-items:center;justify-content:space-between;gap:8px;background:var(--card);border:1px solid var(--g);border-radius:14px;padding:10px 12px;font-size:13px}
+.tb td,.tb th{border:1px solid var(--line);padding:8px;vertical-align:top;text-align:left}.tb th{color:var(--mu);font-weight:600;width:110px}
+.rk th{width:auto}
+.ev{font-size:11px;border-radius:99px;padding:3px 8px;border:1px solid;display:inline-block;font-weight:700;margin-bottom:6px}
+.ev.verificado{background:var(--g);color:#031004;border-color:var(--g)}.ev.informado{color:#ffd24a;border-color:#ffd24a}.ev.sinais{color:var(--g);border-color:var(--g)}.ev.insuf{color:var(--mu);border-color:var(--line)}
+textarea.inp{max-width:100%;width:100%;min-height:110px;font-family:monospace;font-size:12px}
+nav button{font-size:10px;min-width:0}
+</style>
+</head>
+<body>
+<header>
+  <button class="logo" onclick="go('inicio')"><b>@</b>NANDOPESSOAL</button>
+  <span class="tag">v0.3 · Ofertas</span>
+</header>
+<main>
+
+<section class="page on" id="inicio">
+  <h1>Encontre ofertas. Analise anúncios. <span>Descubra oportunidades.</span></h1>
+  <p class="sub">Ferramenta profissional de pesquisa de anúncios para marketing digital.</p>
+  <form class="search" onsubmit="buscar(event,'q1')">
+    <input id="q1" placeholder="Pesquise uma oferta, nicho ou anunciante…" aria-label="Pesquisar ofertas" autocomplete="off">
+    <button class="btn">Buscar</button>
+  </form>
+  <div class="chips" data-cats></div>
+  <div class="grid">
+    <div class="stat"><small>Pesquisas feitas</small><div id="s1">0</div></div>
+    <div class="stat"><small>Anúncios salvos</small><div id="s2">0</div></div>
+    <div class="stat"><small>Fontes conectadas</small><div>0</div></div>
+  </div>
+  <div class="panel">
+    <h2>Como vai funcionar</h2>
+    <p class="pg-sub">Estrutura pronta para receber as integrações reais.</p>
+    <div class="steps">
+      <div class="step"><b>1. Pesquisar</b>Busca por palavra-chave, nicho ou anunciante.</div>
+      <div class="step"><b>2. Analisar</b>Criativos, tempo de veiculação e padrões.</div>
+      <div class="step"><b>3. Salvar</b>Favoritos e histórico para voltar depois.</div>
+    </div>
+  </div>
+  <div class="sec"><h3>Ofertas em Destaque — Mais Escaladas</h3><span class="badge">sinais observáveis</span></div>
+  <div class="ads" id="previa"></div>
+  <div id="rhome"></div>
+</section>
+
+<section class="page" id="resultados">
+  <h2>Resultados da pesquisa</h2>
+  <p class="pg-sub" id="rsub">Faça uma pesquisa para ver resultados aqui.</p>
+  <form id="f2" class="panel" onsubmit="buscar(event,'q2')" novalidate>
+    <div class="search" style="max-width:none;box-shadow:none">
+      <input id="q2" maxlength="120" placeholder="Produto ou palavra-chave…" aria-label="Produto ou palavra-chave" autocomplete="off">
+      <button class="btn" id="bgo">Buscar</button>
+    </div>
+    <div class="chips" data-cats></div>
+    <p class="pg-sub" id="catnote" style="margin:-6px 0 12px">Categoria: rótulo para organizar pesquisas e favoritos. A Meta não filtra por categoria, então use palavras-chave na busca.</p>
+    <div class="filters">
+      <label>País<select id="pais"><option value="BR">Brasil</option><option value="PT">Portugal</option><option value="US">Estados Unidos</option><option value="ES">Espanha</option><option value="MX">México</option><option value="AR">Argentina</option><option value="ALL">Todos os países</option></select></label>
+      <label>Idioma<select id="idioma"><option value="pt">Português</option><option value="en">Inglês</option><option value="es">Espanhol</option><option value="">Qualquer</option></select></label>
+      <label>Status<select id="status"><option value="active">Somente ativos</option><option value="all">Todos</option></select></label>
+      <label>Ordenar por<select id="ordem" onchange="aplicar()"><option value="relevancia">Relevância</option><option value="data_desc">Início mais recente</option><option value="data_asc">Início mais antigo</option><option value="tempo_desc">Maior tempo de veiculação</option><option value="tempo_asc">Menor tempo de veiculação</option><option value="pontuacao">Maior potencial de teste</option><option value="escala">Mais sinais de escalabilidade</option><option value="variacoes">Mais variações de criativo</option><option value="anuncios">Mais anúncios do anunciante</option></select></label>
+    </div>
+    <div id="verr" aria-live="polite"></div>
+  </form>
+  <div id="rbox"></div>
+</section>
+
+<section class="page" id="analise">
+  <h2>Análise de anúncios</h2>
+  <p class="pg-sub">Selecione um anúncio nos resultados para analisá-lo.</p>
+  <div class="grid">
+    <div class="stat"><small>Tempo no ar</small><div>—</div></div>
+    <div class="stat"><small>Variações de criativo</small><div>—</div></div>
+    <div class="stat"><small>Plataforma</small><div>—</div></div>
+    <div class="stat"><small>Países</small><div>—</div></div>
+  </div>
+  <div class="panel"><h2>Criativo</h2><div class="ph" style="border-radius:12px;margin-top:10px">Pré-visualização do anúncio</div></div>
+  <div class="panel"><h2>Texto e oferta</h2><div class="ab" style="padding:10px 0 0"><div class="sk" style="width:90%"></div><div class="sk" style="width:75%"></div><div class="sk" style="width:55%"></div></div></div>
+  <div class="panel"><h2>Anunciante</h2><div class="ab" style="padding:10px 0 0"><div class="sk" style="width:40%"></div><div class="sk" style="width:60%"></div></div></div>
+  <p class="note">Os campos serão preenchidos com dados reais na próxima etapa.</p>
+</section>
+
+<section class="page" id="favoritos">
+  <h2>Favoritos</h2>
+  <p class="pg-sub">Anúncios que você salvar ficarão aqui.</p>
+  <select id="fcat" class="inp" style="max-width:100%;width:100%;margin-bottom:12px" onchange="renderFavs()" aria-label="Categoria"></select>
+  <div id="fbox"></div>
+</section>
+
+<section class="page" id="historico">
+  <h2>Histórico de pesquisas</h2>
+  <p class="pg-sub">Suas pesquisas recentes neste aparelho.</p>
+  <div class="panel" id="hbox"></div>
+  <button class="btn o s" onclick="limpar()">Limpar histórico</button>
+</section>
+
+<section class="page" id="radar">
+  <h2>Ofertas que mais escalaram</h2>
+  <p class="pg-sub">Ranking por nível de evidência: anúncios da última pesquisa e campanhas importadas por você.</p>
+  <div class="panel"><div class="filters">
+   <label>Buscar<input class="inp" id="rq" style="max-width:100%" oninput="radarRender()" placeholder="Oferta, produto ou anunciante"></label>
+   <label>Nicho<select id="rni" onchange="radarRender()"></select></label>
+   <label>País<select id="rpa" onchange="radarRender()"><option value="">Todos</option><option value="BR">Brasil</option><option value="PT">Portugal</option><option value="US">Estados Unidos</option><option value="ES">Espanha</option><option value="MX">México</option><option value="AR">Argentina</option><option value="ALL">Todos os países</option></select></label>
+   <label>Período<select id="rpe" onchange="radarRender()"><option value="">Qualquer</option><option value="30">Últimos 30 dias</option><option value="90">Últimos 90 dias</option><option value="180">Últimos 180 dias</option></select></label>
+   <label>Evidência / ROI<select id="rev" onchange="radarRender()"><option value="">Todas</option><option value="rv">ROI positivo comprovado</option><option value="r20">ROI acima de 20%</option><option value="r50">ROI acima de 50%</option><option value="r100">ROI acima de 100%</option><option value="r200">ROI acima de 200%</option><option value="insuf">Dados insuficientes</option><option value="sinais">Sinais de escala, sem ROI verificado</option></select></label>
+  </div><p class="note" style="text-align:left">Os filtros de ROI acima de X% incluem ROI verificado e informado; o selo de cada linha mostra qual é. O período usa a data de início do anúncio ou a data do relatório importado.</p></div>
+  <div id="rtab"></div>
+  <div class="panel" style="margin-top:12px"><h2>Como classificamos</h2>
+   <p class="pg-sub" style="margin:6px 0 0"><b style="color:var(--tx)">ROI verificado:</b> receita e custos importados de relatório (origem “relatorio”), com cálculo reproduzível. <b style="color:var(--tx)">ROI informado:</b> valores declarados, sem verificação independente. <b style="color:var(--tx)">Sinais de escala:</b> 60 ou mais dias no ar e ao menos 2 destes 3 sinais: 60+ dias, 3+ variações de criativo, 5+ anúncios do anunciante. Muitos anúncios, sozinhos, não classificam. <b style="color:var(--tx)">Dados insuficientes:</b> nada disso foi atingido.<br><br>ROI (%) = (receita − custos totais) ÷ custos totais × 100. ROAS é outra medida (receita ÷ gasto em anúncios) e aparece separado. A Biblioteca da Meta não informa investimento, receita, vendas nem ROI. A evolução de criativos vem só das suas próprias consultas repetidas, neste aparelho.</p></div>
+  <div class="panel"><h2>Importar campanhas próprias</h2>
+   <p class="pg-sub" style="margin:6px 0 10px">CSV com cabeçalho (use ; como separador): anunciante, receita, custo_anuncios (obrigatórias); oferta, outros_custos, origem (relatorio ou declarado), data (AAAA-MM-DD). A ligação com os anúncios é pelo nome do anunciante. Os dados ficam só neste aparelho e os cálculos são feitos nele.</p>
+   <input type="file" accept=".csv,.txt,text/csv" onchange="lerArq(this)" style="font-size:12px;margin-bottom:8px;max-width:100%">
+   <textarea class="inp" id="imptxt" placeholder="Cole aqui o CSV…"></textarea>
+   <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn s" onclick="importar()">Importar</button><button class="btn o s" onclick="$('imptxt').value=EXS">Carregar exemplo</button><button class="btn o s" onclick="limparImp()">Apagar importados</button></div>
+   <div id="impmsg" aria-live="polite" style="margin-top:10px"></div></div>
+</section>
+
+<section class="page" id="comparar"></section>
+
+<section class="page" id="config">
+  <h2>Configurações</h2>
+  <p class="pg-sub">Preferências e conexões da plataforma.</p>
+  <div class="panel">
+    <div class="field"><div>Idioma<small>Interface da plataforma</small></div><select><option>Português (Brasil)</option></select></div>
+    <div class="field"><div>País da pesquisa<small>Local dos anúncios</small></div><select><option>Brasil</option><option>Portugal</option><option>Estados Unidos</option></select></div>
+    <div class="field"><div>Salvar histórico<small>Guardar pesquisas neste aparelho</small></div><button class="sw on" id="swh" onclick="this.classList.toggle('on')" aria-label="Salvar histórico"></button></div>
+  </div>
+  <div class="panel">
+    <h2>Integrações</h2><p class="pg-sub">Biblioteca de Anúncios da Meta (API oficial).</p>
+    <div class="field"><div>Fonte de anúncios<small>Biblioteca de Anúncios da Meta</small></div><span class="badge" id="bdg">Não conectado</span></div>
+    <div class="field" style="flex-direction:column;align-items:stretch"><div>Endereço do seu servidor<small>Servidor próprio que consulta a API da Meta (https://…)</small></div><input class="inp" id="ep" style="max-width:100%" placeholder="https://seu-servidor.com/api/anuncios" onchange="saveEp(this)" autocomplete="off"><small id="epmsg" style="color:var(--mu);font-size:12px">Nunca cole o token de acesso da Meta aqui: ele deve ficar só no servidor.</small></div>
+  </div>
+</section>
+
+</main>
+<div id="cmpbar"></div>
+<nav>
+  <button data-go="inicio" class="on"><i>⌂</i>Início</button>
+  <button data-go="resultados"><i>⌕</i>Resultados</button>
+  <button data-go="radar"><i>◎</i>Radar</button>
+  <button data-go="analise"><i>◔</i>Análise</button>
+  <button data-go="favoritos"><i>★</i>Favoritos</button>
+  <button data-go="historico"><i>↺</i>Histórico</button>
+  <button data-go="config"><i>⚙</i>Ajustes</button>
+</nav>
+<script>
+var CATS=["Todas","Produtos físicos","Produtos digitais e infoprodutos","Moda e beleza","Tecnologia","Alimentação","Serviços","Campanhas legítimas de arrecadação"];
+var cat="Todas",hist=[],favs=[];
+function card(){return '<article class="ad"><div class="ph">Imagem do anúncio</div><div class="ab"><div class="sk" style="width:92%"></div><div class="sk" style="width:70%"></div><div class="meta"><span>Anunciante: <b>—</b></span><span>Início: <b>—</b></span></div><div class="row"><button class="btn s" disabled style="opacity:.55">Ver anúncio original</button><button class="ic" aria-label="Favoritar" onclick="alert(\'Favoritos serão ativados com os dados reais.\')">☆</button></div></div></article>'}
+function go(id){if(id==='radar')setTimeout(radarRender,0);document.querySelectorAll('.page').forEach(function(p){p.classList.toggle('on',p.id===id)});document.querySelectorAll('nav button').forEach(function(b){b.classList.toggle('on',b.dataset.go===id)});window.scrollTo(0,0)}
+function chips(){document.querySelectorAll('[data-cats]').forEach(function(w){w.innerHTML=CATS.map(function(c){return '<button class="chip'+(c===cat?' on':'')+'" data-c="'+c+'">'+c+'</button>'}).join('')})}
+document.addEventListener('click',function(e){var c=e.target.closest('.chip');if(c){cat=c.dataset.c;chips()}var n=e.target.closest('nav button');if(n)go(n.dataset.go);var h=e.target.closest('[data-q]');if(h){document.getElementById('q2').value=h.dataset.q;buscar(null,'q2')}});
+function esc(s){return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function $(i){return document.getElementById(i)}
+function lsGet(){try{return localStorage.getItem('np_ep')||''}catch(e){return ''}}
+var EP=lsGet();
+function badge(){var b=$('bdg');b.textContent=EP?'Servidor configurado':'Não conectado';b.style.color=EP?'var(--g)':'';b.style.borderColor=EP?'var(--g)':''}
+function saveEp(el){var v=el.value.trim(),m=$('epmsg');if(v&&!/^https:\/\/[^\s]+$/i.test(v)){m.textContent='Use um endereço válido começando com https://';m.style.color='#ff8a8a';return}
+ EP=v;try{v?localStorage.setItem('np_ep',v):localStorage.removeItem('np_ep')}catch(e){}
+ m.style.color='';m.textContent=v?'Endereço salvo neste aparelho.':'Endereço removido.';badge()}
+function linkMeta(p){return 'https://www.facebook.com/ads/library/?active_status='+p.status+'&ad_type=all&country='+p.pais+'&media_type=all&search_type=keyword_unordered&q='+encodeURIComponent(p.q)}
+function btnMeta(p){return '<a class="btn" href="'+linkMeta(p)+'" target="_blank" rel="noopener noreferrer">Abrir na Biblioteca de Anúncios da Meta</a>'}
+function showErr(m){$('verr').innerHTML=m?'<div class="err" role="alert">'+m+'</div>':''}
+function fdata(s){var d=new Date(s);return s&&!isNaN(d)?d.toLocaleDateString('pt-BR'):'Não informado'}
+function first(a){return Array.isArray(a)&&a.length?String(a[0]):''}
+function adCard(a){var c=first(a.ad_creative_bodies),t=first(a.ad_creative_link_titles),id=String(a.id||'').replace(/\D/g,''),lk=id?'https://www.facebook.com/ads/library/?id='+id:'';
+ return '<article class="ad"><div class="ph">Prévia disponível no anúncio original</div><div class="ab">'+(t?'<b>'+esc(t)+'</b>':'')+'<div style="font-size:13px;color:var(--mu)">'+(c?esc(c.slice(0,220))+(c.length>220?'…':''):'Texto não informado')+'</div><div class="meta"><span>Anunciante: <b>'+esc(a.page_name||'Não informado')+'</b></span></div><div class="meta"><span>Início: <b>'+fdata(a.ad_delivery_start_time)+'</b></span>'+(a.ad_delivery_stop_time?'<span>Fim: <b>'+fdata(a.ad_delivery_stop_time)+'</b></span>':'')+'</div><div class="row">'+(lk?'<a class="btn s" href="'+lk+'" target="_blank" rel="noopener noreferrer">Ver anúncio original</a>':'<button class="btn s" disabled style="opacity:.55">Link indisponível</button>')+'</div></div></article>'}
+function skel(){var s='<div class="ad" aria-hidden="true"><div class="ph sk2"></div><div class="ab"><div class="sk sk2" style="width:90%"></div><div class="sk sk2" style="width:60%"></div></div></div>';return '<div class="ads" aria-busy="true">'+s+s+s+'</div>'}
+async function buscar(e,src){
+ if(e)e.preventDefault();
+ var raw=$(src||'q2').value.replace(/\s+/g,' ').trim(),q=raw;
+ 
+ $('q2').value=raw;$('q1').value=raw;go('resultados');
+ var m=!q?'Digite um produto ou palavra-chave.':q.length<2?'Digite ao menos 2 caracteres.':q.length>100?'Use no máximo 100 caracteres.':'';
+ showErr(m);
+ if(m){$('rbox').innerHTML='';$('rsub').textContent='Corrija a pesquisa para continuar.';return}
+ var p={q:q,pais:$('pais').value,idioma:$('idioma').value,status:$('status').value,ordem:$('ordem').value};
+ $('rsub').textContent='“'+q+'” · '+$('pais').selectedOptions[0].text+' · '+$('status').selectedOptions[0].text;
+ if($('swh').classList.contains('on')){hist.unshift({q:q,c:cat,t:new Date().toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})});hist=hist.slice(0,30)}
+ render();
+ var kk=JSON.stringify([p.q,p.pais,p.idioma,p.status,EP]);if(kk===LASTK&&ALL.length&&$('rlist'))return;LASTK=kk;if(!EP){$('rbox').innerHTML='<div class="empty"><b>Pesquisa automática não configurada</b>Ainda não há integração com a API oficial da Meta. Abra a Biblioteca de Anúncios com esta pesquisa e consulte os anúncios por lá.<br>'+btnMeta(p)+'<p class="note">O link aplica palavra-chave, país e status. Idioma e ordenação são ajustados na própria Biblioteca. Filtros por anunciante, plataforma, data e o agrupamento de anúncios semelhantes aparecem quando a pesquisa automática retornar anúncios.</p></div>';return}
+ ALL=[];$('bgo').disabled=true;$('rbox').innerHTML='<p class="note">Coletando an\u00fancios\u2026 pode levar at\u00e9 1 minuto.</p>'+skel();
+ var ctl=new AbortController(),tm=setTimeout(function(){ctl.abort()},180000),out='';
+ try{
+  var qs=new URLSearchParams({q:p.q,country:p.pais,status:p.status});if(p.idioma)qs.set('language',p.idioma);
+  var u=function(){return EP+(EP.indexOf('?')<0?'?':'&')+qs},hd={signal:ctl.signal,headers:{Accept:'application/json'}};
+  var r=await fetch(u(),hd);
+  if(!r.ok)throw new Error('http '+r.status);
+  var j=await r.json();
+  while(j&&j.status==='rodando'&&j.runId){await new Promise(function(z){setTimeout(z,4000)});qs.set('runId',j.runId);r=await fetch(u(),hd);if(!r.ok)throw new Error('http '+r.status);j=await r.json()}
+  var d=j&&Array.isArray(j.data)?j.data.slice():null;
+  if(!d)throw new Error('formato');
+  if(!d.length)out='<div class="empty"><b>Nenhum anúncio encontrado</b>Tente outra palavra-chave, outro país ou o status “Todos”.<br>'+btnMeta(p)+'</div>';
+  else{
+   ALL=d.filter(function(a){return a&&typeof a==='object'});ALL.forEach(function(a){a._cat=cat==='Todas'?'':cat;if(a.id)ADS[String(a.id).replace(/\D/g,'')]=a});calc();
+   out='<div id="dest"></div><div id="fpan"></div><div id="rlist"></div><p class="note">'+btnMeta(p).replace('class="btn"','class="btn o s"')+'</p>';
+  }
+ }catch(err){
+  var s=err.name==='AbortError'?'A consulta demorou demais. Tente novamente.':/^http/.test(err.message)?'O servidor respondeu com erro ('+err.message.slice(5)+').':err.message==='formato'?'O servidor enviou uma resposta em formato inesperado.':'Não foi possível conectar ao servidor. Verifique o endereço, sua conexão e a permissão de acesso (CORS).';
+  out='<div class="err" role="alert">'+s+'</div><div class="empty" style="margin-top:12px">Você ainda pode consultar direto na fonte oficial.<br>'+btnMeta(p)+'</div>';
+ }finally{clearTimeout(tm);$('bgo').disabled=false}
+ $('rbox').innerHTML=out;if(ALL.length&&$('rlist')){painel();aplicar()}destaques()}
+function limpar(){hist=[];render()}
+function render(){document.getElementById('s1').textContent=hist.length;document.getElementById('s2').textContent=favs.length;
+ document.getElementById('hbox').innerHTML=hist.length?hist.map(function(h){return '<div class="hist"><div>'+esc(h.q)+'<div class="meta" style="margin-top:3px"><span>'+h.c+' · '+h.t+'</span></div></div><button class="btn o s" data-q="'+esc(h.q)+'">Repetir</button></div>'}).join(''):'<div class="empty" style="border:0"><b>Sem pesquisas ainda</b>Suas buscas aparecerão aqui.</div>'}
+
+document.getElementById('fbox').innerHTML='<div class="empty"><b>Nenhum favorito</b>Toque na estrela de um anúncio para salvá-lo.</div><div class="ads" style="margin-top:14px">'+card()+'</div>';
+var ALL=[],ADS={},LIB='https://www.facebook.com/ads/library/?id=';
+function v(i){var e=$(i);return e?e.value:''}
+function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]+/g,' ').replace(/\s+/g,' ').trim()}
+function txt(a){return first(a.ad_creative_bodies)+' '+first(a.ad_creative_link_titles)}
+function dur(a){var s=Date.parse(a.ad_delivery_start_time);if(isNaN(s))return null;var e=a.ad_delivery_stop_time?Date.parse(a.ad_delivery_stop_time):Date.now();if(isNaN(e))e=Date.now();return Math.max(0,Math.round((e-s)/864e5))}
+function key(a,t){var x=t==='s'?Date.parse(a.ad_delivery_start_time):dur(a);return x==null||isNaN(x)?null:x}
+function ord(l,o){if(o==='relevancia')return l;var M={pontuacao:function(a){return a._s&&a._s.total},escala:function(a){return a._s&&a._s.esc},variacoes:function(a){return a._g},anuncios:function(a){return a._n}};if(M[o])return l.slice().sort(function(a,b){var x=M[o](a),y=M[o](b);if(x==null)return y==null?0:1;if(y==null)return -1;return y-x});var t=o.indexOf('data')===0?'s':'d',dir=/desc$/.test(o)?-1:1;return l.slice().sort(function(a,b){var x=key(a,t),y=key(b,t);if(x===null)return y===null?0:1;if(y===null)return -1;return (x-y)*dir})}
+function nomePl(s){s=String(s).replace(/_/g,' ').toLowerCase();return s.charAt(0).toUpperCase()+s.slice(1)}
+function toks(a){var s={};norm(txt(a)).split(' ').forEach(function(w){if(w.length>2)s[w]=1});return s}
+function jac(x,y){var i=0,u=0,k;for(k in x){u++;if(y[k])i++}for(k in y)if(!x[k])u++;return u?i/u:0}
+function agrupar(l){var gs=[],T=l.map(toks),N=l.map(function(a){return norm(txt(a))});
+ l.forEach(function(a,i){var hit=null;if(a.page_name){for(var j=0;j<gs.length&&!hit;j++){var g=gs[j];if(g.p!==a.page_name)continue;if(g.m.some(function(m){return (N[m]&&N[m]===N[i])||(Object.keys(T[m]).length>=3&&Object.keys(T[i]).length>=3&&jac(T[m],T[i])>=0.6)}))hit=g}}
+  if(hit)hit.m.push(i);else gs.push({p:a.page_name,m:[i]})});
+ return gs.map(function(g){return g.m.map(function(i){return l[i]})})}
+function isFav(id){return favs.some(function(a){return String(a.id)===id})}
+function loadFavs(){try{favs=JSON.parse(localStorage.getItem('np_fav')||'[]')}catch(e){favs=[]}if(!Array.isArray(favs))favs=[];favs.forEach(function(a){if(a&&a.id)ADS[String(a.id)]=a})}
+function saveFavs(){try{localStorage.setItem('np_fav',JSON.stringify(favs))}catch(e){}}
+function toggleFav(id){var a=ADS[id];if(isFav(id))favs=favs.filter(function(x){return String(x.id)!==id});else if(a){a._salvo=new Date().toLocaleDateString('pt-BR');favs.push(a)}saveFavs();render();renderFavs();aplicar()}
+function renderFavs(){var c=v('fcat'),l=favs.filter(function(a){return !c||a._cat===c});$('fbox').innerHTML=!favs.length?'<div class="empty"><b>Nenhum favorito</b>Toque na estrela de um anúncio dos resultados para salvá-lo aqui.</div>':!l.length?'<div class="empty"><b>Nenhum favorito nesta categoria</b></div>':'<div class="ads">'+l.map(function(a){var i=String(a.id).replace(/\D/g,'');return '<div>'+cardAd(a)+'<div class="panel" style="margin:6px 0 0;font-size:12px">'+(a._salvo?'Salvo em '+a._salvo+(a._pesq?' · pesquisado em '+a._pesq:'')+'<br>':'')+'<textarea class="inp" style="max-width:100%;width:100%;margin-top:6px" maxlength="300" placeholder="Nota pessoal…" onchange="nota(\''+i+'\',this.value)">'+esc(a._nota||'')+'</textarea></div></div>'}).join('')+'</div>'}
+function cardAd(a,g){g=g||[a];var c=first(a.ad_creative_bodies),t=first(a.ad_creative_link_titles),id=String(a.id||'').replace(/\D/g,''),d=dur(a),pl=Array.isArray(a.publisher_platforms)?a.publisher_platforms.map(nomePl).join(', '):'',f=id&&isFav(id);
+ var vr=g.length>1?'<details style="font-size:12px;color:var(--mu)"><summary style="cursor:pointer;color:var(--g)">Ver variações</summary><div style="margin:6px 0">Agrupadas por texto parecido do mesmo anunciante. Pode haver erros.</div>'+g.map(function(x){var xi=String(x.id||'').replace(/\D/g,'');return '<div style="padding:6px 0;border-top:1px solid var(--line)">'+fdata(x.ad_delivery_start_time)+' · '+esc((first(x.ad_creative_bodies)||first(x.ad_creative_link_titles)||'Sem texto').slice(0,90))+(xi?' · <a href="'+LIB+xi+'" target="_blank" rel="noopener noreferrer" style="color:var(--g)">abrir</a>':'')+'</div>'}).join('')+'</details>':'';
+ return '<article class="ad"><div class="ph">Prévia disponível no anúncio original</div><div class="ab">'+(a._cat?'<span class="badge" style="align-self:flex-start">'+esc(a._cat)+'</span>':'')+(g.length>1?'<span class="badge" style="align-self:flex-start;color:var(--g);border-color:var(--g)">'+g.length+' variações semelhantes</span>':'')+(t?'<b>'+esc(t)+'</b>':'')+'<div style="font-size:13px;color:var(--mu)">'+(c?esc(c.slice(0,220))+(c.length>220?'…':''):'Texto não informado')+'</div><div class="meta"><span>Anunciante: <b>'+esc(a.page_name||'Não informado')+'</b></span></div><div class="meta"><span>Início: <b>'+fdata(a.ad_delivery_start_time)+'</b></span>'+(a.ad_delivery_stop_time?'<span>Fim: <b>'+fdata(a.ad_delivery_stop_time)+'</b></span>':'')+'</div>'+(d!==null?'<div class="meta"><span>Veiculação: <b>'+d+' dia(s)</b>'+(a.ad_delivery_stop_time?'':' (até hoje)')+'</span></div>':'')+(pl?'<div class="meta"><span>Plataformas: <b>'+esc(pl)+'</b></span></div>':'')+scoreHtml(a)+vr+(id?'<div class="row"><button class="btn o s" data-an="'+id+'">Analisar oferta</button><label class="chip" style="display:flex;gap:6px;align-items:center;flex:none"><input type="checkbox" data-cmp="'+id+'"'+(CMP.indexOf(id)>-1?' checked':'')+'> Comparar</label></div>':'')+'<div class="row">'+(id?'<a class="btn s" href="'+LIB+id+'" target="_blank" rel="noopener noreferrer">Ver anúncio original</a><button class="ic" data-fav="'+id+'" aria-label="Favoritar" aria-pressed="'+!!f+'">'+(f?'★':'☆')+'</button>':'<button class="btn s" disabled style="opacity:.55">Link indisponível</button>')+'</div></div></article>'}
+function opt(x,t){return '<option value="'+esc(x)+'">'+esc(t||x)+'</option>'}
+function painel(){var adv=[],pls=[],hasD=false,hasF=false,hasN=false,na=[];
+ ALL.forEach(function(a){if(a.page_name&&adv.indexOf(a.page_name)<0)adv.push(a.page_name);(Array.isArray(a.publisher_platforms)?a.publisher_platforms:[]).forEach(function(x){if(pls.indexOf(x)<0)pls.push(x)});if(!isNaN(Date.parse(a.ad_delivery_start_time)))hasD=true;if(a.ad_delivery_stop_time)hasF=true;else hasN=true});
+ var h='<div class="panel"><b>Filtros dos resultados</b><div class="filters" style="margin-top:10px"><label>Palavra-chave<input class="inp" id="fkw" style="max-width:100%" oninput="aplicar()" placeholder="Filtrar texto…"></label>';
+ if(adv.length>1)h+='<label>Anunciante<select id="fadv" onchange="aplicar()"><option value="">Todos</option>'+adv.sort().map(function(x){return opt(x)}).join('')+'</select></label>';else na.push('anunciante');
+ if(pls.length>1)h+='<label>Plataforma<select id="fplat" onchange="aplicar()"><option value="">Todas</option>'+pls.map(function(x){return opt(x,nomePl(x))}).join('')+'</select></label>';else na.push('plataforma');
+ if(hasD)h+='<label>Início a partir de<input class="inp" type="date" id="fde" style="max-width:100%" onchange="aplicar()"></label><label>Início até<input class="inp" type="date" id="fate" style="max-width:100%" onchange="aplicar()"></label>';else na.push('data de início');
+ if(hasF&&hasN)h+='<label>Situação<select id="fsit" onchange="aplicar()"><option value="">Todas</option><option value="semfim">Sem data de fim informada</option><option value="fim">Com data de fim</option></select></label>';else na.push('situação');
+ if(ALL.some(function(a){return first(a.ad_creative_link_captions)}))h+='<label style="flex-direction:row;align-items:center;gap:8px;font-size:13px;color:var(--tx)"><input type="checkbox" id="fdest" onchange="aplicar()" style="width:20px;height:20px;accent-color:#39ff14">Só com destino informado</label>';else na.push('destino');h+='</div><div class="field"><div>Agrupar anúncios semelhantes<small>Mesmo anunciante e texto parecido</small></div><input type="checkbox" id="fgrp" checked onchange="aplicar()" style="width:22px;height:22px;accent-color:#39ff14"></div><div class="meta"><span id="fcount"></span><button class="btn o s" onclick="limparF()">Limpar filtros</button></div>'+(na.length?'<p class="note" style="text-align:left">Filtros indisponíveis nesta pesquisa (dados não informados ou sem variação): '+na.join(', ')+'.</p>':'')+'<p class="note" style="text-align:left">Tempo no ar e anúncio ativo não indicam lucro ou resultado. A Meta não informa vendas, faturamento nem conversão.</p></div>';
+ $('fpan').innerHTML=h}
+function limparF(){['fkw','fadv','fplat','fde','fate','fsit'].forEach(function(i){if($(i))$(i).value=''});if($('fdest'))$('fdest').checked=false;aplicar()}
+function aplicar(){if(!$('rlist'))return;var kw=norm(v('fkw')),adv=v('fadv'),pl=v('fplat'),de=v('fde'),ate=v('fate'),sit=v('fsit');
+ var l=ALL.filter(function(a){if(kw&&norm(txt(a)+' '+a.page_name).indexOf(kw)<0)return false;if(adv&&a.page_name!==adv)return false;if(pl&&!(Array.isArray(a.publisher_platforms)&&a.publisher_platforms.indexOf(pl)>-1))return false;var s=Date.parse(a.ad_delivery_start_time);if(de&&(isNaN(s)||s<Date.parse(de)))return false;if(ate&&(isNaN(s)||s>Date.parse(ate)+864e5-1))return false;if($('fdest')&&$('fdest').checked&&!first(a.ad_creative_link_captions))return false;if(sit==='fim'&&!a.ad_delivery_stop_time)return false;if(sit==='semfim'&&a.ad_delivery_stop_time)return false;return true});
+ l=ord(l,v('ordem'));var gr=$('fgrp')&&$('fgrp').checked,gs=gr?agrupar(l):l.map(function(a){return [a]});
+ $('fcount').textContent=l.length+' de '+ALL.length+' anúncios'+(gr?' · '+gs.length+' grupos':'');
+ $('rlist').innerHTML=gs.length?'<div class="ads">'+gs.map(function(g){return cardAd(g[0],g)}).join('')+'</div>':'<div class="empty"><b>Nenhum anúncio corresponde aos filtros</b><button class="btn o s" onclick="limparF()">Limpar filtros</button></div>'}
+document.addEventListener('click',function(e){var f=e.target.closest('[data-fav]');if(f)toggleFav(f.dataset.fav);if(e.target.closest('.chip')){var n=$('catnote');if(n)n.textContent=cat==='Campanhas legítimas de arrecadação'?'Atenção: a categoria é só um rótulo e não verifica legitimidade. Confira o anunciante e a origem do pedido de doação.':'Categoria: rótulo para organizar pesquisas e favoritos. A Meta não filtra por categoria, então use palavras-chave na busca.'}});
+var LASTK='',CMP=[],CTA=/\b(compre|comprar|garanta|garantir|aproveite|saiba mais|clique|acesse|peça|baixe|cadastre|comece|experimente|assine|agende|doe|contribua|participe|inscreva)/i;
+function preco(a){var m=txt(a).match(/R\$\s?\d[\d.]*(?:,\d{2})?/);return m?m[0]:''}
+function scoreAd(a){var P=[],T=txt(a).trim(),d=dur(a),N={t:'Tempo de veiculação',v:'Variações de criativo',a:'Anúncios do mesmo anunciante',c:'Clareza da oferta',x:'Chamada para ação'};
+ function add(k,max,pts,why){P.push({k:k,lab:N[k],max:max,pts:pts,why:why})}
+ if(d!==null)add('t',25,Math.min(25,Math.round(d/90*25)),d+' dia(s) observados; nota cheia a partir de 90');
+ if(a._g!=null)add('v',20,Math.min(20,(a._g-1)*5),a._g+' anúncio(s) semelhante(s) nos resultados; nota cheia com 5 ou mais');
+ if(a._n!=null)add('a',15,Math.min(15,(a._n-1)*3),a._n+' anúncio(s) do anunciante nos resultados; nota cheia com 6 ou mais');
+ if(T){var c=0,w=[];if(T.length>=40){c+=8;w.push('texto com 40 ou mais caracteres')}if(first(a.ad_creative_link_titles)){c+=4;w.push('título informado')}if(preco(a)){c+=3;w.push('preço citado no texto')}add('c',15,c,w.join(', ')||'texto muito curto');var u=CTA.test(T);add('x',10,u?10:0,u?'verbo de ação detectado':'nenhum verbo de ação detectado')}
+ var tot=0,mx=0,es=0,em=0,got={};P.forEach(function(p){got[p.k]=1;tot+=p.pts;mx+=p.max;if('tva'.indexOf(p.k)>-1){es+=p.pts;em+=p.max}});
+ var fl=Object.keys(N).filter(function(k){return !got[k]}).map(function(k){return N[k]});fl.push('Qualidade da página de destino (não verificável pela API)');
+ return {parts:P,total:mx<45?null:Math.round(tot/mx*100),esc:em<35?null:Math.round(es/em*100),conf:mx<45?'dados insuficientes':mx/85>=.9?'alta':mx/85>=.6?'média':'baixa',faltam:fl}}
+function calc(){var n={},hoje=new Date().toLocaleDateString('pt-BR');ALL.forEach(function(a){if(a.page_name)n[a.page_name]=(n[a.page_name]||0)+1});agrupar(ALL).forEach(function(g){g.forEach(function(a){a._g=g.length})});ALL.forEach(function(a){a._n=a.page_name?n[a.page_name]:null;a._pesq=hoje;a._pais=$('pais').value;a._q=norm($('q2').value);a._s=scoreAd(a)});snap();radarHome()}
+function partes(s){return s.parts.map(function(p){return '<div style="padding:5px 0;border-top:1px solid var(--line)"><b style="color:var(--tx)">'+p.lab+': '+p.pts+'/'+p.max+'</b><br>'+esc(p.why)+'</div>'}).join('')+'<div style="padding:5px 0;border-top:1px solid var(--line)">Não avaliado: '+esc(s.faltam.join('; '))+'.</div><div style="padding:5px 0;border-top:1px solid var(--line)">Nota de 0 a 100 calculada só com os critérios disponíveis. É uma estimativa por sinais públicos; não indica vendas, lucro nem resultado.</div>'}
+function scoreHtml(a){var s=a._s||(a._s=scoreAd(a));return '<div style="border:1px solid var(--line);border-radius:12px;padding:10px;font-size:12px"><div class="meta"><span>Potencial de teste (estimativa)</span><b style="color:var(--g)">'+(s.total==null?'Dados insuficientes':s.total+'/100')+'</b></div><div class="meta"><span>Sinais de escalabilidade</span><b>'+(s.esc==null?'—':s.esc+'/100')+'</b></div><div class="meta"><span>Confiança</span><b>'+s.conf+'</b></div><details style="margin-top:6px;color:var(--mu)"><summary style="cursor:pointer;color:var(--g)">Por que esta nota?</summary>'+partes(s)+'</details></div>'}
+function destaques(){var gs=ALL.length?agrupar(ALL).filter(function(g){return g[0]._s&&g[0]._s.esc!=null}).sort(function(x,y){return y[0]._s.esc-x[0]._s.esc}).slice(0,3):[],h=gs.length?'<p class="note" style="text-align:left;margin:0 0 10px">Ordenadas por sinais de escalabilidade (tempo no ar, variações e anúncios do anunciante). Não são resultados de vendas.</p><div class="hs">'+gs.map(function(g){return cardAd(g[0],g)}).join('')+'</div>':'',H=$('previa'),R=$('dest');
+ if(H){H.className='';H.innerHTML=h||'<div class="empty"><b>Sem ofertas para destacar</b>Faça uma pesquisa com a integração configurada. Os destaques usam só sinais observáveis nos anúncios retornados.</div>'}
+ if(R)R.innerHTML=h?'<div class="sec"><h3>Ofertas em Destaque — Mais Escaladas</h3><span class="badge">sinais observáveis</span></div>'+h:''}
+function nota(id,t){var a=ADS[id];if(a){a._nota=t.slice(0,300);saveFavs()}}
+function sync(){document.querySelectorAll('[data-cmp]').forEach(function(c){c.checked=CMP.indexOf(c.dataset.cmp)>-1})}
+function cmpBar(){var b=$('cmpbar');b.style.display=CMP.length?'flex':'none';b.innerHTML='<span>'+CMP.length+' de 3 selecionadas</span><span><button class="btn s" onclick="comparar()"'+(CMP.length<2?' disabled style="opacity:.55"':'')+'>Comparar</button> <button class="btn o s" onclick="CMP=[];cmpBar();sync()">Limpar</button></span>'}
+function comparar(){var L=CMP.map(function(i){return ADS[i]}).filter(Boolean);if(L.length<2)return;
+ var S=function(a){return a._s||(a._s=scoreAd(a))};
+ var R=[['Oferta',function(a){return esc(String(first(a.ad_creative_link_titles)||a.page_name||'Anúncio '+a.id))}],['Anunciante',function(a){return esc(a.page_name||'Não informado')}],['Nicho (rótulo da pesquisa)',function(a){return esc(a._cat||'Não informado')}],['Proposta de valor (texto do anúncio)',function(a){var c=first(a.ad_creative_bodies);return c?esc(c.slice(0,140))+(c.length>140?'…':''):'Não informado'}],['Preço citado no texto',function(a){return esc(preco(a)||'Não informado')}],['Tipo de criativo',function(){return 'Não informado pela API'}],['Variações semelhantes',function(a){return a._g==null?'—':a._g}],['Tempo de veiculação',function(a){var d=dur(a);return d===null?'Não informado':d+' dia(s)'+(a.ad_delivery_stop_time?'':' (até hoje)')}],['Página de destino (domínio)',function(a){return esc(first(a.ad_creative_link_captions)||'Não informada')}],['Potencial de teste',function(a){var s=S(a);return s.total==null?'Dados insuficientes':s.total+'/100 · confiança '+s.conf}],['Sinais de escalabilidade',function(a){var s=S(a);return s.esc==null?'—':s.esc+'/100'}],['Anúncio original',function(a){return '<a href="'+LIB+String(a.id).replace(/\D/g,'')+'" target="_blank" rel="noopener noreferrer" style="color:var(--g)">Abrir</a>'}]];
+ var b=null;L.forEach(function(a){if(S(a).total!==null&&(!b||S(a).total>S(b).total))b=a});
+ var con=b?'Considerando apenas os sinais observáveis, “'+esc(String(first(b.ad_creative_link_titles)||b.page_name||b.id))+'” tem a maior pontuação de potencial de teste ('+S(b).total+'/100). Isso indica só que há mais sinais públicos para investigar, não que venda mais. Antes de testar, confira a página de destino, o preço e a política da plataforma.':'Não há dados suficientes para indicar qual oferta testar primeiro.';
+ $('comparar').innerHTML='<button class="btn o s" data-back>← Voltar</button><h2 style="margin-top:12px">Comparador de ofertas</h2><p class="pg-sub">Dados da Biblioteca de Anúncios. Campos ausentes aparecem como “Não informado”.</p><div style="overflow-x:auto"><table class="tb" style="border-collapse:collapse;width:100%;min-width:'+(110+L.length*170)+'px;font-size:12px">'+R.map(function(r){return '<tr><th>'+r[0]+'</th>'+L.map(function(a){return '<td>'+r[1](a)+'</td>'}).join('')+'</tr>'}).join('')+'</table></div><div class="panel" style="margin-top:12px"><b>Qual testar primeiro?</b><p style="font-size:13px;margin-top:6px">'+con+'</p></div><div class="panel"><b>Limitações</b><p class="pg-sub" style="margin:6px 0 0">A Biblioteca não informa vendas, faturamento, conversão nem investimento. Qualidade da página, preço real e tipo de criativo não são verificados. Isto apoia a escolha do que investigar, não garante resultado.</p></div>';go('comparar')}
+function analisar(id){var a=ADS[id];if(!a)return;var s=a._s||(a._s=scoreAd(a)),c=first(a.ad_creative_bodies),t=first(a.ad_creative_link_titles),d=dur(a),cap=first(a.ad_creative_link_captions),pl=Array.isArray(a.publisher_platforms)?a.publisher_platforms.map(nomePl).join(', '):'',R=function(k,x){return '<div class="field"><div>'+k+'</div><div style="text-align:right;max-width:60%">'+x+'</div></div>'};
+ $('analise').innerHTML='<button class="btn o s" data-back>← Voltar</button><h2 style="margin-top:12px">'+esc(String(t||a.page_name||'Anúncio '+id))+'</h2><p class="pg-sub">Anúncio '+esc(id)+(a._pesq?' · pesquisado em '+a._pesq:'')+'</p>'
+ +'<div class="panel"><h2>Dados verificados</h2><p class="pg-sub">Informados pela Biblioteca de Anúncios da Meta.</p>'+R('Anunciante',esc(a.page_name||'Não informado'))+R('Início',fdata(a.ad_delivery_start_time))+R('Fim',a.ad_delivery_stop_time?fdata(a.ad_delivery_stop_time):'Não informado')+R('Veiculação',d===null?'Não informado':d+' dia(s)'+(a.ad_delivery_stop_time?'':' (até hoje)'))+R('Plataformas',esc(pl||'Não informado'))+R('Destino (domínio)',esc(cap||'Não informado'))+'<div style="margin-top:10px;font-size:13px;white-space:pre-wrap">'+(c?esc(c):'Texto não informado')+'</div></div>'
+ +'<div class="panel"><h2>Sinais detectados no texto</h2><p class="pg-sub">Leitura automática simples; confira no anúncio original.</p>'+R('Preço citado',esc(preco(a)||'Nenhum'))+R('Chamada para ação',CTA.test(txt(a))?'Verbo de ação detectado':'Nenhuma detectada')+'</div>'
+ +'<div class="panel"><h2>Pontuação: '+(s.total==null?'Dados insuficientes':s.total+'/100')+'</h2><p class="pg-sub">Confiança '+s.conf+' · Escalabilidade '+(s.esc==null?'—':s.esc+'/100')+'</p><div style="font-size:12px;color:var(--mu)">'+partes(s)+'</div></div>'
+ +'<div class="panel"><h2>O que não dá para afirmar</h2><p class="pg-sub" style="margin:6px 0 0">Vendas, faturamento, ROAS, conversões, investimento, público real e qualidade da página de destino não são informados pela Biblioteca. Tempo no ar e variações são hipóteses de operação contínua, não prova de lucro.</p></div>'
+ +'<div class="panel"><h2>Análise com IA</h2><p class="pg-sub">Não configurada. Resumo, público provável, promessa, benefícios, objeções, pontos fortes e fracos, melhorias e ideias de criativos exigem um servidor com IA. Quando ativa, o resultado deve separar o que é verificado do que é hipótese.</p><button class="btn s" disabled style="opacity:.55">Gerar análise com IA</button></div>'
+ +'<a class="btn" href="'+LIB+esc(id)+'" target="_blank" rel="noopener noreferrer">Ver anúncio original</a>';go('analise')}
+document.addEventListener('click',function(e){var x=e.target.closest('[data-an]');if(x)analisar(x.dataset.an);if(e.target.closest('[data-back]'))go('resultados')});
+document.addEventListener('change',function(e){var c=e.target.closest&&e.target.closest('[data-cmp]');if(!c)return;var id=c.dataset.cmp,i=CMP.indexOf(id);if(c.checked){if(CMP.length>=3){c.checked=false;return}if(i<0)CMP.push(id)}else if(i>-1)CMP.splice(i,1);cmpBar();sync()});
+var IMP=[],RK={verificado:4,informado:3,sinais:2,insuf:1},NV={verificado:'ROI verificado',informado:'ROI informado',sinais:'Sinais de escala',insuf:'Dados insuficientes'},EXS='anunciante;oferta;receita;custo_anuncios;outros_custos;origem;data\nEXEMPLO Loja A;Produto de teste A;15000,00;6000,00;3000,00;relatorio;2026-09-30\nEXEMPLO Loja B;Produto de teste B;8000,00;5000,00;2000,00;declarado;2026-09-30';
+function fmt(n){return n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}
+function loadImp(){try{IMP=JSON.parse(localStorage.getItem('np_imp')||'[]')}catch(e){IMP=[]}if(!Array.isArray(IMP))IMP=[]}
+function saveImp(){try{localStorage.setItem('np_imp',JSON.stringify(IMP))}catch(e){}}
+function initRadar(){$('rni').innerHTML='<option value="">Todos</option>'+CATS.slice(1).map(function(c){return opt(c)}).join('');radarHome()}
+function num(s){s=String(s==null?'':s).replace(/R\$|\s/g,'');if(!s)return null;if(s.indexOf(',')>-1)s=s.replace(/\./g,'').replace(',','.');var n=Number(s);return isFinite(n)&&n>=0?n:NaN}
+function lerArq(el){var f=el.files[0];if(!f)return;if(f.size>1e6){$('impmsg').innerHTML='<div class="err">Arquivo grande demais (máximo 1 MB).</div>';return}var r=new FileReader();r.onload=function(){$('imptxt').value=String(r.result)};r.readAsText(f)}
+function limparImp(){IMP=[];saveImp();$('impmsg').innerHTML='';radarRender();radarHome()}
+function importar(){var t=$('imptxt').value.trim(),m=$('impmsg');if(!t){m.innerHTML='<div class="err">Cole ou escolha um arquivo CSV.</div>';return}
+ var ls=t.split(/\r?\n/).filter(function(l){return l.trim()}),sep=ls[0].indexOf(';')>-1?';':',',H=ls[0].split(sep).map(function(h){return norm(h).replace(/ /g,'_')}),er=[],nv=[];
+ var ix=function(ns){for(var i=0;i<ns.length;i++){var j=H.indexOf(ns[i]);if(j>-1)return j}return -1},c={an:ix(['anunciante']),of:ix(['oferta','produto']),re:ix(['receita','receita_atribuida']),ca:ix(['custo_anuncios','investimento','gasto','custo']),ou:ix(['outros_custos']),or:ix(['origem']),dt:ix(['data','periodo'])};
+ if(c.an<0||c.re<0||c.ca<0){m.innerHTML='<div class="err">Cabeçalho inválido. São obrigatórias as colunas: anunciante, receita e custo_anuncios.</div>';return}
+ ls.slice(1).forEach(function(l,i){var p=l.split(sep),g=function(j){return j<0?'':(p[j]||'').trim()},re=num(g(c.re)),ca=num(g(c.ca)),ou=g(c.ou)?num(g(c.ou)):0,an=g(c.an);
+  if(!an||re==null||ca==null||isNaN(re)||isNaN(ca)||isNaN(ou)||(ca+ou)<=0){er.push(i+2);return}
+  nv.push({anunciante:an.slice(0,120),oferta:g(c.of).slice(0,120),receita:re,custo_anuncios:ca,outros:ou,origem:norm(g(c.or))==='relatorio'?'relatorio':'declarado',data:g(c.dt).slice(0,10),ex:/^exemplo/i.test(an)})});
+ if(!nv.length){m.innerHTML='<div class="err">Nenhuma linha válida. Linhas ignoradas: '+er.slice(0,10).join(', ')+'.</div>';return}
+ IMP=IMP.concat(nv).slice(-500);saveImp();$('imptxt').value='';
+ m.innerHTML='<div class="empty" style="padding:12px">'+nv.length+' linha(s) importada(s).'+(er.length?' Ignoradas por dados inválidos, nas linhas: '+er.slice(0,10).join(', ')+'.':'')+'</div>';radarRender();radarHome()}
+function snap(){var S={};try{S=JSON.parse(localStorage.getItem('np_snap')||'{}')}catch(e){}var d=new Date().toISOString().slice(0,10);ALL.forEach(function(a){if(!a.page_name)return;var k=a._q+'|'+norm(a.page_name)+'|'+a._pais,L=S[k]=S[k]||[],last=L[L.length-1];if(last&&last.d===d)last.n=a._n;else L.push({d:d,n:a._n});if(L.length>20)L.shift()});try{localStorage.setItem('np_snap',JSON.stringify(S))}catch(e){}}
+function evol(a){var S={};try{S=JSON.parse(localStorage.getItem('np_snap')||'{}')}catch(e){}var L=S[(a._q||'')+'|'+norm(a.page_name||'')+'|'+a._pais]||[];return L.length>=2?L[0].n+' → '+L[L.length-1].n+' anúncios ('+L.length+' dias de consulta)':'Não disponível (sem histórico)'}
+function sinaisOf(a,g){var d=dur(a),k=0,t=[];if(d!==null&&d>=60){k++;t.push(d+' dias no ar')}if(g.length>=3){k++;t.push(g.length+' variações')}if(a._n>=5){k++;t.push(a._n+' anúncios do anunciante')}return {ok:d!==null&&d>=60&&k>=2,t:t}}
+function roiOf(R){if(!R)return null;var rec=0,ca=0,ou=0,n=0,ver=true,ex=false,dt='';R.forEach(function(r){rec+=r.receita;ca+=r.custo_anuncios;ou+=r.outros||0;n++;if(r.origem!=='relatorio')ver=false;if(r.ex)ex=true;if(r.data>dt)dt=r.data});var c=ca+ou;if(!n||c<=0)return null;return {roi:(rec-c)/c*100,rec:rec,ca:ca,ou:ou,cust:c,ver:ver,ex:ex,data:dt}}
+function roiHtml(x){if(!x)return '<div>ROI: Não disponível</div>';return '<div><b>ROI '+x.roi.toFixed(1).replace('.',',')+'%</b> ('+(x.ver?'verificado':'informado, não verificado')+')</div><details style="color:var(--mu)"><summary style="cursor:pointer;color:var(--g)">Cálculo</summary>Receita '+fmt(x.rec)+'<br>Custos incluídos: anúncios '+fmt(x.ca)+(x.ou?' + outros '+fmt(x.ou):'')+' = '+fmt(x.cust)+'<br>ROI = (receita − custos) ÷ custos × 100<br>ROAS (medida à parte): '+(x.ca>0?(x.rec/x.ca).toFixed(2).replace('.',',')+'×':'Não disponível')+'</details>'+(x.ex?'<div class="badge">DADOS DE EXEMPLO</div>':'')}
+function radarRows(){var map={},used={},rows=[];IMP.forEach(function(r){var k=norm(r.anunciante);(map[k]=map[k]||[]).push(r)});
+ if(ALL.length)agrupar(ALL).forEach(function(g){var a=g[0],k=norm(a.page_name||''),R=map[k]||null;if(R)used[k]=1;rows.push({a:a,nome:String(first(a.ad_creative_link_titles)||a.page_name||'Anúncio '+a.id),anun:a.page_name||'Não informado',dias:dur(a),crit:g.length,nAn:a._n,evo:evol(a),roi:roiOf(R),si:sinaisOf(a,g),esc:a._s?a._s.esc:null,dt:Date.parse(a.ad_delivery_start_time),nicho:a._cat||'',pais:a._pais||'',fonte:'Biblioteca de Anúncios da Meta · pesquisado em '+(a._pesq||'—'),id:String(a.id||'').replace(/\D/g,'')})});
+ Object.keys(map).forEach(function(k){if(used[k])return;var R=map[k],ro=roiOf(R);rows.push({a:null,nome:R[0].oferta||R[0].anunciante,anun:R[0].anunciante,dias:null,crit:null,nAn:null,evo:'Não disponível',roi:ro,si:{ok:false,t:[]},esc:null,dt:ro?Date.parse(ro.data):NaN,nicho:'',pais:'',fonte:'Importação própria',id:''})});
+ rows.forEach(function(r){r.nv=r.roi?(r.roi.ver?'verificado':'informado'):(r.si.ok?'sinais':'insuf')});return rows}
+function radarRender(){var T=$('rtab');if(!T)return;var rs=radarRows(),tot=rs.length,q=norm(v('rq')),ni=v('rni'),pa=v('rpa'),pe=v('rpe'),ev=v('rev');
+ rs=rs.filter(function(r){if(q&&norm(r.nome+' '+r.anun).indexOf(q)<0)return false;if(ni&&r.nicho!==ni)return false;if(pa&&r.pais!==pa)return false;if(pe&&!(r.dt&&Date.now()-r.dt<=pe*864e5))return false;var ro=r.roi?r.roi.roi:null;if(ev==='rv')return !!(r.roi&&r.roi.ver&&ro>0);if(/^r\d+$/.test(ev))return ro!==null&&ro>Number(ev.slice(1));if(ev==='insuf')return r.nv==='insuf';if(ev==='sinais')return r.si.ok&&!(r.roi&&r.roi.ver);return true});
+ rs.sort(function(x,y){return RK[y.nv]-RK[x.nv]||(y.roi?y.roi.roi:-1e9)-(x.roi?x.roi.roi:-1e9)||(y.esc||-1)-(x.esc||-1)});
+ if(!tot){T.innerHTML='<div class="empty"><b>Nenhuma oferta para classificar</b>Faça uma pesquisa com a integração configurada ou importe relatórios de campanhas próprias abaixo.</div>';return}
+ if(!rs.length){T.innerHTML='<div class="empty"><b>Nenhuma oferta corresponde aos filtros</b></div>';return}
+ T.innerHTML='<div class="meta" style="margin-bottom:8px"><span>'+rs.length+' oferta(s)</span></div><div style="overflow-x:auto"><table class="tb rk" style="border-collapse:collapse;width:100%;min-width:820px;font-size:12px"><tr><th>#</th><th>Oferta</th><th>Anunciante</th><th>Tempo</th><th>Criativos</th><th>Evolução</th><th>Evidência</th><th>Fonte e data</th><th>Ações</th></tr>'+rs.map(function(r,i){
+  var nt=r.nv==='sinais'?'Sinais: '+r.si.t.join('; '):r.nv==='insuf'?(r.dias===null&&r.a?'Sem data de início informada':r.a?'Sinais de escala abaixo do critério ('+(r.si.t.join('; ')||'nenhum')+')':'Sem anúncios na pesquisa atual para este anunciante'):(r.a&&r.si.t.length?'Sinais: '+r.si.t.join('; '):'');
+  return '<tr><td>'+(i+1)+'</td><td>'+esc(r.nome)+(r.roi&&r.roi.ex?'<br><span class="badge">DADOS DE EXEMPLO</span>':'')+'</td><td>'+esc(r.anun)+'</td><td>'+(r.dias===null?'Não disponível':r.dias+' dia(s)')+'</td><td>'+(r.crit==null?'Não disponível':r.crit+' variação(ões)<br>'+(r.nAn||'—')+' anúncio(s) do anunciante')+'</td><td>'+esc(r.evo)+'</td><td><span class="ev '+r.nv+'">'+NV[r.nv]+'</span>'+(nt?'<div style="color:var(--mu);margin-bottom:6px">'+esc(nt)+'</div>':'')+roiHtml(r.roi)+'</td><td>'+esc(r.fonte)+(r.roi?'<br>ROI: '+(r.roi.ex?'exemplo':'importação própria')+(r.roi.data?' · '+fdata(r.roi.data):''):'')+'</td><td>'+(r.id?'<div style="display:flex;flex-direction:column;gap:6px"><button class="btn s" data-an="'+r.id+'">Analisar</button><a class="btn o s" href="'+LIB+r.id+'" target="_blank" rel="noopener noreferrer">Anúncio original</a></div>':'Anúncio original: Não disponível')+'</td></tr>'}).join('')+'</table></div>'}
+function radarHome(){var el=$('rhome');if(!el)return;var rs=radarRows(),c={verificado:0,informado:0,sinais:0,insuf:0};rs.forEach(function(r){c[r.nv]++});var inv=rs.filter(function(r){return r.si.ok&&!(r.roi&&r.roi.ver)}).slice(0,3);
+ el.innerHTML='<div class="sec"><h3>Radar de ofertas vencedoras</h3><button class="btn o s" data-pg="radar">Abrir radar</button></div><div class="grid"><div class="stat"><small>ROI verificado</small><div>'+c.verificado+'</div></div><div class="stat"><small>ROI informado</small><div>'+c.informado+'</div></div><div class="stat"><small>Sinais de escala</small><div>'+c.sinais+'</div></div><div class="stat"><small>Dados insuficientes</small><div>'+c.insuf+'</div></div></div><p class="note" style="text-align:left">Merecem investigação (sinais de escala, sem ROI verificado): '+(inv.length?inv.map(function(r){return esc(r.nome)}).join(', '):'nenhuma por enquanto')+'. Fonte: sua última pesquisa e relatórios importados.</p>'}
+document.addEventListener('click',function(e){var x=e.target.closest('[data-pg]');if(x)go(x.dataset.pg)});
+loadFavs();chips();render();$('ep').value=EP;badge();$('fcat').innerHTML='<option value="">Todas as categorias</option>'+CATS.slice(1).map(function(c){return opt(c)}).join('');renderFavs();destaques();loadImp();initRadar();
+</script>
+</body>
+</html>
