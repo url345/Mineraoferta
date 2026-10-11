@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>@NANDOPESSOAL — Buscador de Ofertas</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#07090a">
+<link rel="icon" href="/icon-192-1.png">
+<link rel="apple-touch-icon" href="/icon-192-1.png">
+<meta name="mobile-web-app-capable" content="yes">
 <style>
 :root{--bg:#07090a;--bg2:#0e1214;--card:#12171a;--line:#1f272b;--tx:#f4f7f5;--mu:#8a979a;--g:#39ff14;--gd:rgba(57,255,20,.12);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#07090a}}
@@ -394,5 +399,6 @@ function radarHome(){var el=$('rhome');if(!el)return;var rs=radarRows(),c={verif
 document.addEventListener('click',function(e){var x=e.target.closest('[data-pg]');if(x)go(x.dataset.pg)});
 loadFavs();chips();render();$('ep').value=EP;badge();$('fcat').innerHTML='<option value="">Todas as categorias</option>'+CATS.slice(1).map(function(c){return opt(c)}).join('');renderFavs();destaques();loadImp();initRadar();
 </script>
+<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(function(){})</script>
 </body>
 </html>
