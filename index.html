@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>@NANDOPESSOAL — Buscador de Ofertas</title>
+<title>@NANDOPESSOAL — Anúncios e Vídeos</title>
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#07090a">
 <link rel="icon" href="/icon-192-1.png">
@@ -91,66 +92,33 @@ nav button{font-size:10px;min-width:0}
 .bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden}.bar i{display:block;height:100%;background:var(--g)}
 .az-img{width:100%;border-radius:12px;max-height:70vh;object-fit:contain;background:#000}
 .az-ul{padding-left:18px;font-size:13px;margin:4px 0 10px}
+input[type=range]{width:100%;accent-color:#39ff14}
+.chip{cursor:pointer}
 </style>
 </head>
 <body>
 <header>
-  <button class="logo" onclick="go('inicio')"><b>@</b>NANDOPESSOAL</button>
-  <span class="tag">v0.3 · Ofertas</span>
+  <button class="logo" data-go="procurar"><b>@</b>NANDOPESSOAL</button>
+  <span class="tag">v0.4</span>
 </header>
 <main>
 
-<section class="page on" id="inicio">
-  <h1>Encontre ofertas. Analise anúncios. <span>Descubra oportunidades.</span></h1>
-  <p class="sub">Ferramenta profissional de pesquisa de anúncios para marketing digital.</p>
-  <form class="search" onsubmit="buscar(event,'q1')">
-    <input id="q1" placeholder="Pesquise uma oferta, nicho ou anunciante…" aria-label="Pesquisar ofertas" autocomplete="off">
-    <button class="btn">Buscar</button>
+<section class="page on" id="procurar">
+  <h2>Procurar anúncios</h2>
+  <p class="pg-sub">Abre a Biblioteca de Anúncios da Meta já com a sua pesquisa. A Meta não permite que o app leia os anúncios sozinho.</p>
+  <form class="panel" onsubmit="procurar(event)" novalidate>
+    <label class="lb">Produto ou palavra-chave<input class="inp" id="pr-q" maxlength="100" style="max-width:100%" placeholder="Ex.: apoio lombar" autocomplete="off"></label>
+    <div class="filters" style="margin-bottom:10px">
+      <label>País<select id="pr-pais"><option value="BR">Brasil</option><option value="PT">Portugal</option><option value="US">Estados Unidos</option><option value="ES">Espanha</option><option value="MX">México</option><option value="AR">Argentina</option><option value="ALL">Todos os países</option></select></label>
+      <label>Situação<select id="pr-st"><option value="active">Somente ativos</option><option value="all">Todos</option></select></label>
+      <label>Tipo de anúncio<select id="pr-md"><option value="all">Todos</option><option value="video">Vídeo</option><option value="image">Imagem</option></select></label>
+    </div>
+    <label style="flex-direction:row;align-items:center;gap:8px;font-size:13px;color:var(--tx);margin-bottom:12px"><input type="checkbox" id="pr-ex" style="width:20px;height:20px;accent-color:#39ff14">Buscar a frase exata</label>
+    <button class="btn" style="width:100%">Abrir na Biblioteca da Meta</button>
+    <div id="pr-msg" aria-live="polite" style="margin-top:10px"></div>
   </form>
-  <div class="chips" data-cats></div>
-  <div class="panel" id="porlink">
-    <h2>Analisador de Anúncios</h2>
-    <p class="pg-sub" style="margin:4px 0 12px">Cole a URL do anúncio e veja o diagnóstico, o criativo e as métricas que você informar.</p>
-    <button class="btn" style="width:100%" data-pg="analise">Abrir o Analisador</button>
-  </div>
-  <div class="grid">
-    <div class="stat"><small>Pesquisas feitas</small><div id="s1">0</div></div>
-    <div class="stat"><small>Anúncios salvos</small><div id="s2">0</div></div>
-    <div class="stat"><small>Fontes conectadas</small><div>0</div></div>
-  </div>
-  <div class="panel">
-    <h2>Como vai funcionar</h2>
-    <p class="pg-sub">Estrutura pronta para receber as integrações reais.</p>
-    <div class="steps">
-      <div class="step"><b>1. Pesquisar</b>Busca por palavra-chave, nicho ou anunciante.</div>
-      <div class="step"><b>2. Analisar</b>Criativos, tempo de veiculação e padrões.</div>
-      <div class="step"><b>3. Salvar</b>Favoritos e histórico para voltar depois.</div>
-    </div>
-  </div>
-  <div class="sec"><h3>Ofertas em Destaque — Mais Escaladas</h3><span class="badge">sinais observáveis</span></div>
-  <div class="ads" id="previa"></div>
-  <div id="rhome"></div>
-</section>
-
-<section class="page" id="resultados">
-  <h2>Resultados da pesquisa</h2>
-  <p class="pg-sub" id="rsub">Faça uma pesquisa para ver resultados aqui.</p>
-  <form id="f2" class="panel" onsubmit="buscar(event,'q2')" novalidate>
-    <div class="search" style="max-width:none;box-shadow:none">
-      <input id="q2" maxlength="120" placeholder="Produto ou palavra-chave…" aria-label="Produto ou palavra-chave" autocomplete="off">
-      <button class="btn" id="bgo">Buscar</button>
-    </div>
-    <div class="chips" data-cats></div>
-    <p class="pg-sub" id="catnote" style="margin:-6px 0 12px">Categoria: rótulo para organizar pesquisas e favoritos. A Meta não filtra por categoria, então use palavras-chave na busca.</p>
-    <div class="filters">
-      <label>País<select id="pais"><option value="BR">Brasil</option><option value="PT">Portugal</option><option value="US">Estados Unidos</option><option value="ES">Espanha</option><option value="MX">México</option><option value="AR">Argentina</option><option value="ALL">Todos os países</option></select></label>
-      <label>Idioma<select id="idioma"><option value="pt">Português</option><option value="en">Inglês</option><option value="es">Espanhol</option><option value="">Qualquer</option></select></label>
-      <label>Status<select id="status"><option value="active">Somente ativos</option><option value="all">Todos</option></select></label>
-      <label>Ordenar por<select id="ordem" onchange="aplicar()"><option value="relevancia">Relevância</option><option value="data_desc">Início mais recente</option><option value="data_asc">Início mais antigo</option><option value="tempo_desc">Maior tempo de veiculação</option><option value="tempo_asc">Menor tempo de veiculação</option><option value="pontuacao">Maior potencial de teste</option><option value="escala">Mais sinais de escalabilidade</option><option value="variacoes">Mais variações de criativo</option><option value="anuncios">Mais anúncios do anunciante</option></select></label>
-    </div>
-    <div id="verr" aria-live="polite"></div>
-  </form>
-  <div id="rbox"></div>
+  <div class="panel"><h2>Como usar</h2>
+    <p class="pg-sub" style="margin:6px 0 0">1. Pesquise aqui e abra a Biblioteca.<br>2. Escolha um anúncio e copie o link dele (precisa ter <b>id=</b>).<br>3. Toque em <b>Analisar</b> e cole o link e o texto do anúncio.<br>4. Grave a tela do vídeo do anúncio e edite em <b>Vídeos</b>.</p></div>
 </section>
 
 <section class="page" id="analise">
@@ -161,6 +129,7 @@ nav button{font-size:10px;min-width:0}
     <button class="btn" style="width:100%;margin-bottom:12px" onclick="azRodar()">Analisar anúncio</button>
     <label class="lb">Texto do anúncio<textarea class="inp" id="az-txt" maxlength="3000" style="min-height:100px;font-family:inherit;font-size:14px" placeholder="Cole aqui o texto do anúncio"></textarea></label>
     <label class="lb">Criativo (imagens ou vídeos do anúncio)<input type="file" id="az-file" multiple accept="image/*,video/*" onchange="azArq(this)" style="font-size:12px;max-width:100%"></label>
+    <button class="btn o s" style="margin:-4px 0 10px" onclick="azColar()">Colar imagem copiada</button>
     <div id="az-sel" class="note" style="text-align:left;margin:-4px 0 8px"></div>
     <details style="margin-bottom:8px"><summary style="cursor:pointer;color:var(--g);font-size:14px">Mais dados do anúncio (opcional)</summary>
       <div class="filters" style="margin-top:10px">
@@ -189,182 +158,102 @@ nav button{font-size:10px;min-width:0}
   </div>
   <div id="az-res"></div>
   <div id="minhas"></div>
-  <div class="sec"><h3>Biblioteca de criativos</h3><span class="badge">salvos neste aparelho</span></div>
+</section>
+
+<section class="page" id="videos">
+  <h2>Vídeos</h2>
+  <p class="pg-sub">Edite gravações de tela. O processamento usa o FFmpeg (gratuito) no seu próprio aparelho: o vídeo não é enviado para nenhum servidor.</p>
+  <div class="panel">
+    <label class="lb">1. Escolha a gravação (até 150 MB)<input type="file" id="ve-file" accept="video/*" onchange="veEscolher(this)" style="font-size:12px;max-width:100%"></label>
+    <div id="ve-info" class="note" style="text-align:left"></div>
+    <video id="ve-v" playsinline preload="auto" style="position:absolute;width:2px;height:2px;opacity:0;pointer-events:none"></video>
+  </div>
+  <div id="ve-ed" style="display:none">
+    <div class="panel"><h2>Pré-visualização</h2>
+      <p class="pg-sub" style="margin:4px 0 10px">Simulação do resultado (corte, bordas, formato e legendas). O arquivo final é gerado ao exportar.</p>
+      <canvas id="ve-cv" style="width:100%;max-width:420px;display:block;margin:0 auto;border-radius:12px;background:#000"></canvas>
+      <div class="meta" style="margin:10px 0"><span id="ve-tm">0:00</span><span id="ve-fm"></span></div>
+      <div style="display:flex;gap:8px"><button class="btn s" id="ve-play" onclick="vePlay()">Tocar</button><button class="btn o s" onclick="veIr(0)">Voltar ao início do corte</button></div>
+    </div>
+    <div class="panel"><h2>2. Corte</h2>
+      <div class="filters" style="grid-template-columns:1fr 1fr">
+        <label>Início (s)<input class="inp" type="number" step="0.1" min="0" id="ve-s" oninput="veUpd()" style="max-width:100%"></label>
+        <label>Fim (s)<input class="inp" type="number" step="0.1" min="0" id="ve-e" oninput="veUpd()" style="max-width:100%"></label>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px"><button class="btn o s" onclick="veMarca('ve-s')">Início = agora</button><button class="btn o s" onclick="veMarca('ve-e')">Fim = agora</button></div>
+      <p class="note" id="ve-clip" style="text-align:left"></p>
+    </div>
+    <div class="panel"><h2>3. Remover bordas</h2>
+      <button class="btn o s" onclick="veAuto()">Detectar bordas pretas (usa FFmpeg)</button>
+      <div class="filters" style="grid-template-columns:1fr 1fr;margin-top:10px">
+        <label>Topo (%)<input type="range" min="0" max="40" step="0.5" value="0" id="ve-ct" oninput="veUpd()"></label>
+        <label>Base (%)<input type="range" min="0" max="40" step="0.5" value="0" id="ve-cb" oninput="veUpd()"></label>
+        <label>Esquerda (%)<input type="range" min="0" max="40" step="0.5" value="0" id="ve-cl" oninput="veUpd()"></label>
+        <label>Direita (%)<input type="range" min="0" max="40" step="0.5" value="0" id="ve-cr" oninput="veUpd()"></label>
+      </div>
+      <div id="ve-cmsg" class="note" style="text-align:left"></div>
+    </div>
+    <div class="panel"><h2>4. Formato e tamanho</h2>
+      <div class="chips" id="ve-fmts" style="flex-wrap:wrap"></div>
+      <div class="chips" id="ve-fits" style="flex-wrap:wrap"></div>
+    </div>
+    <div class="panel"><h2>5. Áudio</h2>
+      <label class="lb">Volume: <b id="ve-vl" style="color:var(--tx)">100%</b><input type="range" min="0" max="200" step="5" value="100" id="ve-vol" oninput="veUpd()"></label>
+      <label style="flex-direction:row;align-items:center;gap:8px;font-size:13px;color:var(--tx);margin-bottom:8px"><input type="checkbox" id="ve-mute" onchange="veUpd()" style="width:20px;height:20px;accent-color:#39ff14">Remover o áudio</label>
+      <label style="flex-direction:row;align-items:center;gap:8px;font-size:13px;color:var(--tx)"><input type="checkbox" id="ve-norm" onchange="veUpd()" style="width:20px;height:20px;accent-color:#39ff14">Equalizar o volume (normalizar)</label>
+    </div>
+    <div class="panel"><h2>6. Compressão</h2>
+      <label class="lb">Qualidade<select id="ve-q" onchange="veUpd()"><option value="p">Padrão (720p, melhor imagem, mais lento)</option><option value="r">Rápida (540p, arquivo menor, mais rápido)</option></select></label>
+    </div>
+    <div class="panel"><h2>7. Legendas</h2>
+      <p class="pg-sub" style="margin:4px 0 10px">Legendas digitadas por você, gravadas no vídeo. A legenda automática (transcrição) não está incluída: não há uma opção gratuita leve o bastante para rodar bem no celular.</p>
+      <div class="filters" style="grid-template-columns:1fr 1fr;margin-bottom:8px">
+        <label>Tamanho<select id="ve-ss" onchange="veUpd()"><option value="0.035">Pequena</option><option value="0.045" selected>Média</option><option value="0.06">Grande</option></select></label>
+        <label>Posição<select id="ve-sp" onchange="veUpd()"><option value="b">Embaixo</option><option value="m">No meio</option></select></label>
+      </div>
+      <div id="ve-subs"></div>
+      <button class="btn o s" onclick="veSubAdd()">Adicionar legenda</button>
+    </div>
+    <div class="panel"><h2>8. Exportar MP4</h2>
+      <p class="note" style="text-align:left;margin-top:0">O original não é alterado. Na primeira vez o app baixa o FFmpeg (cerca de 31 MB, depois fica guardado no aparelho). O tempo depende do aparelho: pode levar vários minutos.</p>
+      <div style="display:flex;gap:8px"><button class="btn" id="ve-go" style="flex:1" onclick="veExport()">Exportar MP4</button><button class="btn o" id="ve-cancel" style="display:none" onclick="veCancel()">Cancelar</button></div>
+      <div id="ve-prog" style="display:none;margin-top:12px"><div class="meta"><span id="ve-st">Preparando…</span><b id="ve-pc" style="color:var(--tx)"></b></div><div class="bar"><i id="ve-pb" style="width:0%"></i></div></div>
+      <div id="ve-msg" aria-live="polite" style="margin-top:10px"></div>
+      <div id="ve-out" style="margin-top:12px"></div>
+    </div>
+  </div>
+  <div class="sec"><h3>Meus vídeos</h3><span class="badge">salvos neste aparelho</span></div>
+  <div class="chips" id="az-vf"><button class="chip on" onclick="vfSet('video')">Vídeos</button><button class="chip" onclick="vfSet('image')">Imagens</button><button class="chip" onclick="vfSet('todos')">Todos</button></div>
   <div id="az-lib"></div>
-  <div id="crop" style="display:none;position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.94);flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:12px">
-    <div style="color:var(--mu);font-size:13px">Arraste sobre a imagem para escolher a área</div>
-    <canvas id="cv" style="touch-action:none;max-width:100%;border:1px solid var(--line)"></canvas>
-    <div id="cvasp" style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center"></div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><button class="btn s" onclick="cropSalvar()">Salvar recorte</button><button class="btn o s" onclick="cropBaixar()">Baixar recorte</button><button class="btn o s" onclick="cropFechar()">Cancelar</button></div>
-    <div id="cvmsg" style="font-size:12px;color:#ff8a8a"></div>
-  </div>
-</section>
-
-<section class="page" id="favoritos">
-  <h2>Favoritos</h2>
-  <p class="pg-sub">Anúncios que você salvar ficarão aqui.</p>
-  <select id="fcat" class="inp" style="max-width:100%;width:100%;margin-bottom:12px" onchange="renderFavs()" aria-label="Categoria"></select>
-  <div id="fbox"></div>
-</section>
-
-<section class="page" id="historico">
-  <h2>Histórico de pesquisas</h2>
-  <p class="pg-sub">Suas pesquisas recentes neste aparelho.</p>
-  <div class="panel" id="hbox"></div>
-  <button class="btn o s" onclick="limpar()">Limpar histórico</button>
-</section>
-
-<section class="page" id="radar">
-  <h2>Ofertas que mais escalaram</h2>
-  <p class="pg-sub">Ranking por nível de evidência: anúncios da última pesquisa e campanhas importadas por você.</p>
-  <div class="panel"><div class="filters">
-   <label>Buscar<input class="inp" id="rq" style="max-width:100%" oninput="radarRender()" placeholder="Oferta, produto ou anunciante"></label>
-   <label>Nicho<select id="rni" onchange="radarRender()"></select></label>
-   <label>País<select id="rpa" onchange="radarRender()"><option value="">Todos</option><option value="BR">Brasil</option><option value="PT">Portugal</option><option value="US">Estados Unidos</option><option value="ES">Espanha</option><option value="MX">México</option><option value="AR">Argentina</option><option value="ALL">Todos os países</option></select></label>
-   <label>Período<select id="rpe" onchange="radarRender()"><option value="">Qualquer</option><option value="30">Últimos 30 dias</option><option value="90">Últimos 90 dias</option><option value="180">Últimos 180 dias</option></select></label>
-   <label>Evidência / ROI<select id="rev" onchange="radarRender()"><option value="">Todas</option><option value="rv">ROI positivo comprovado</option><option value="r20">ROI acima de 20%</option><option value="r50">ROI acima de 50%</option><option value="r100">ROI acima de 100%</option><option value="r200">ROI acima de 200%</option><option value="insuf">Dados insuficientes</option><option value="sinais">Sinais de escala, sem ROI verificado</option></select></label>
-  </div><p class="note" style="text-align:left">Os filtros de ROI acima de X% incluem ROI verificado e informado; o selo de cada linha mostra qual é. O período usa a data de início do anúncio ou a data do relatório importado.</p></div>
-  <div id="rtab"></div>
-  <div class="panel" style="margin-top:12px"><h2>Como classificamos</h2>
-   <p class="pg-sub" style="margin:6px 0 0"><b style="color:var(--tx)">ROI verificado:</b> receita e custos importados de relatório (origem “relatorio”), com cálculo reproduzível. <b style="color:var(--tx)">ROI informado:</b> valores declarados, sem verificação independente. <b style="color:var(--tx)">Sinais de escala:</b> 60 ou mais dias no ar e ao menos 2 destes 3 sinais: 60+ dias, 3+ variações de criativo, 5+ anúncios do anunciante. Muitos anúncios, sozinhos, não classificam. <b style="color:var(--tx)">Dados insuficientes:</b> nada disso foi atingido.<br><br>ROI (%) = (receita − custos totais) ÷ custos totais × 100. ROAS é outra medida (receita ÷ gasto em anúncios) e aparece separado. A Biblioteca da Meta não informa investimento, receita, vendas nem ROI. A evolução de criativos vem só das suas próprias consultas repetidas, neste aparelho.</p></div>
-  <div class="panel"><h2>Importar campanhas próprias</h2>
-   <p class="pg-sub" style="margin:6px 0 10px">CSV com cabeçalho (use ; como separador): anunciante, receita, custo_anuncios (obrigatórias); oferta, outros_custos, origem (relatorio ou declarado), data (AAAA-MM-DD). A ligação com os anúncios é pelo nome do anunciante. Os dados ficam só neste aparelho e os cálculos são feitos nele.</p>
-   <input type="file" accept=".csv,.txt,text/csv" onchange="lerArq(this)" style="font-size:12px;margin-bottom:8px;max-width:100%">
-   <textarea class="inp" id="imptxt" placeholder="Cole aqui o CSV…"></textarea>
-   <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn s" onclick="importar()">Importar</button><button class="btn o s" onclick="$('imptxt').value=EXS">Carregar exemplo</button><button class="btn o s" onclick="limparImp()">Apagar importados</button></div>
-   <div id="impmsg" aria-live="polite" style="margin-top:10px"></div></div>
-</section>
-
-<section class="page" id="comparar"></section>
-
-<section class="page" id="config">
-  <h2>Configurações</h2>
-  <p class="pg-sub">Preferências e conexões da plataforma.</p>
-  <div class="panel">
-    <div class="field"><div>Idioma<small>Interface da plataforma</small></div><select><option>Português (Brasil)</option></select></div>
-    <div class="field"><div>País da pesquisa<small>Local dos anúncios</small></div><select><option>Brasil</option><option>Portugal</option><option>Estados Unidos</option></select></div>
-    <div class="field"><div>Salvar histórico<small>Guardar pesquisas neste aparelho</small></div><button class="sw on" id="swh" onclick="this.classList.toggle('on')" aria-label="Salvar histórico"></button></div>
-  </div>
-  <div class="panel">
-    <h2>Integrações</h2><p class="pg-sub">Biblioteca de Anúncios da Meta (API oficial).</p>
-    <div class="field"><div>Fonte de anúncios<small>Biblioteca de Anúncios da Meta</small></div><span class="badge" id="bdg">Não conectado</span></div>
-    <div class="field" style="flex-direction:column;align-items:stretch"><div>Endereço do seu servidor<small>Servidor próprio que consulta a API da Meta (https://…)</small></div><input class="inp" id="ep" style="max-width:100%" placeholder="https://seu-servidor.com/api/anuncios" onchange="saveEp(this)" autocomplete="off"><small id="epmsg" style="color:var(--mu);font-size:12px">Nunca cole o token de acesso da Meta aqui: ele deve ficar só no servidor.</small></div>
-  </div>
 </section>
 
 </main>
-<div id="cmpbar"></div>
+<div id="toast" role="status" style="display:none;position:fixed;left:12px;right:12px;bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:40;background:var(--card);border:1px solid var(--g);border-radius:12px;padding:12px;font-size:13px"></div>
+<div id="crop" style="display:none;position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.94);flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:12px">
+  <div style="color:var(--mu);font-size:13px">Arraste sobre a imagem para escolher a área</div>
+  <canvas id="cv" style="touch-action:none;max-width:100%;border:1px solid var(--line)"></canvas>
+  <div id="cvasp" style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center"></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><button class="btn s" onclick="cropSalvar()">Salvar recorte</button><button class="btn o s" onclick="cropBaixar()">Baixar recorte</button><button class="btn o s" onclick="cropFechar()">Cancelar</button></div>
+  <div id="cvmsg" style="font-size:12px;color:#ff8a8a"></div>
+</div>
 <nav>
-  <button data-go="inicio" class="on"><i>⌂</i>Início</button>
-  <button data-go="resultados"><i>⌕</i>Resultados</button>
-  <button data-go="radar"><i>◎</i>Radar</button>
+  <button data-go="procurar" class="on"><i>⌕</i>Procurar</button>
   <button data-go="analise"><i>◔</i>Analisar</button>
-  <button data-go="favoritos"><i>★</i>Favoritos</button>
-  <button data-go="historico"><i>↺</i>Histórico</button>
-  <button data-go="config"><i>⚙</i>Ajustes</button>
+  <button data-go="videos"><i>▶</i>Vídeos</button>
 </nav>
+
 <script>
 var CATS=["Todas","Produtos físicos","Produtos digitais e infoprodutos","Moda e beleza","Tecnologia","Alimentação","Serviços","Campanhas legítimas de arrecadação"];
-var cat="Todas",hist=[],favs=[];
-function card(){return '<article class="ad"><div class="ph">Imagem do anúncio</div><div class="ab"><div class="sk" style="width:92%"></div><div class="sk" style="width:70%"></div><div class="meta"><span>Anunciante: <b>—</b></span><span>Início: <b>—</b></span></div><div class="row"><button class="btn s" disabled style="opacity:.55">Ver anúncio original</button><button class="ic" aria-label="Favoritar" onclick="alert(\'Favoritos serão ativados com os dados reais.\')">☆</button></div></div></article>'}
-function go(id){if(id==='radar')setTimeout(radarRender,0);if(id==='analise')setTimeout(azBib,0);document.querySelectorAll('.page').forEach(function(p){p.classList.toggle('on',p.id===id)});document.querySelectorAll('nav button').forEach(function(b){b.classList.toggle('on',b.dataset.go===id)});window.scrollTo(0,0)}
-function chips(){document.querySelectorAll('[data-cats]').forEach(function(w){w.innerHTML=CATS.map(function(c){return '<button class="chip'+(c===cat?' on':'')+'" data-c="'+c+'">'+c+'</button>'}).join('')})}
-document.addEventListener('click',function(e){var c=e.target.closest('.chip');if(c){cat=c.dataset.c;chips()}var n=e.target.closest('nav button');if(n)go(n.dataset.go);var h=e.target.closest('[data-q]');if(h){document.getElementById('q2').value=h.dataset.q;buscar(null,'q2')}});
+var ADS={},MAN=[],LIB='https://www.facebook.com/ads/library/?id=',CTA=/\b(compre|comprar|garanta|garantir|aproveite|saiba mais|clique|acesse|peça|baixe|cadastre|comece|experimente|assine|agende|doe|contribua|participe|inscreva)/i;
 function esc(s){return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function $(i){return document.getElementById(i)}
-function lsGet(){try{return localStorage.getItem('np_ep')||''}catch(e){return ''}}
-var EP=lsGet();
-function badge(){var b=$('bdg');b.textContent=EP?'Servidor configurado':'Não conectado';b.style.color=EP?'var(--g)':'';b.style.borderColor=EP?'var(--g)':''}
-function saveEp(el){var v=el.value.trim(),m=$('epmsg');if(v&&!/^https:\/\/[^\s]+$/i.test(v)){m.textContent='Use um endereço válido começando com https://';m.style.color='#ff8a8a';return}
- EP=v;try{v?localStorage.setItem('np_ep',v):localStorage.removeItem('np_ep')}catch(e){}
- m.style.color='';m.textContent=v?'Endereço salvo neste aparelho.':'Endereço removido.';badge()}
-function linkMeta(p){return 'https://www.facebook.com/ads/library/?active_status='+p.status+'&ad_type=all&country='+p.pais+'&media_type=all&search_type=keyword_unordered&q='+encodeURIComponent(p.q)}
-function btnMeta(p){return '<a class="btn" href="'+linkMeta(p)+'" target="_blank" rel="noopener noreferrer">Abrir na Biblioteca de Anúncios da Meta</a>'}
-function showErr(m){$('verr').innerHTML=m?'<div class="err" role="alert">'+m+'</div>':''}
 function fdata(s){var d=new Date(s);return s&&!isNaN(d)?d.toLocaleDateString('pt-BR'):'Não informado'}
 function first(a){return Array.isArray(a)&&a.length?String(a[0]):''}
-function adCard(a){var c=first(a.ad_creative_bodies),t=first(a.ad_creative_link_titles),id=String(a.id||'').replace(/\D/g,''),lk=id?'https://www.facebook.com/ads/library/?id='+id:'';
- return '<article class="ad"><div class="ph">Prévia disponível no anúncio original</div><div class="ab">'+(t?'<b>'+esc(t)+'</b>':'')+'<div style="font-size:13px;color:var(--mu)">'+(c?esc(c.slice(0,220))+(c.length>220?'…':''):'Texto não informado')+'</div><div class="meta"><span>Anunciante: <b>'+esc(a.page_name||'Não informado')+'</b></span></div><div class="meta"><span>Início: <b>'+fdata(a.ad_delivery_start_time)+'</b></span>'+(a.ad_delivery_stop_time?'<span>Fim: <b>'+fdata(a.ad_delivery_stop_time)+'</b></span>':'')+'</div><div class="row">'+(lk?'<a class="btn s" href="'+lk+'" target="_blank" rel="noopener noreferrer">Ver anúncio original</a>':'<button class="btn s" disabled style="opacity:.55">Link indisponível</button>')+'</div></div></article>'}
-function skel(){var s='<div class="ad" aria-hidden="true"><div class="ph sk2"></div><div class="ab"><div class="sk sk2" style="width:90%"></div><div class="sk sk2" style="width:60%"></div></div></div>';return '<div class="ads" aria-busy="true">'+s+s+s+'</div>'}
-async function buscar(e,src){
- if(e)e.preventDefault();
- var raw=$(src||'q2').value.replace(/\s+/g,' ').trim(),q=raw;
- 
- $('q2').value=raw;$('q1').value=raw;go('resultados');
- var m=!q?'Digite um produto ou palavra-chave.':q.length<2?'Digite ao menos 2 caracteres.':q.length>100?'Use no máximo 100 caracteres.':'';
- showErr(m);
- if(m){$('rbox').innerHTML='';$('rsub').textContent='Corrija a pesquisa para continuar.';return}
- var p={q:q,pais:$('pais').value,idioma:$('idioma').value,status:$('status').value,ordem:$('ordem').value};
- $('rsub').textContent='“'+q+'” · '+$('pais').selectedOptions[0].text+' · '+$('status').selectedOptions[0].text;
- if($('swh').classList.contains('on')){hist.unshift({q:q,c:cat,t:new Date().toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})});hist=hist.slice(0,30)}
- render();
- var kk=JSON.stringify([p.q,p.pais,p.idioma,p.status,EP]);if(kk===LASTK&&ALL.length&&$('rlist'))return;LASTK=kk;if(!EP){$('rbox').innerHTML='<div class="empty"><b>Pesquisa automática não configurada</b>Ainda não há integração com a API oficial da Meta. Abra a Biblioteca de Anúncios com esta pesquisa e consulte os anúncios por lá.<br>'+btnMeta(p)+'<p class="note">O link aplica palavra-chave, país e status. Idioma e ordenação são ajustados na própria Biblioteca. Filtros por anunciante, plataforma, data e o agrupamento de anúncios semelhantes aparecem quando a pesquisa automática retornar anúncios.</p></div>';return}
- ALL=[];$('bgo').disabled=true;$('rbox').innerHTML='<p class="note">Coletando an\u00fancios\u2026 pode levar at\u00e9 1 minuto.</p>'+skel();
- var ctl=new AbortController(),tm=setTimeout(function(){ctl.abort()},180000),out='';
- try{
-  var qs=new URLSearchParams({q:p.q,country:p.pais,status:p.status});if(p.idioma)qs.set('language',p.idioma);
-  var u=function(){return EP+(EP.indexOf('?')<0?'?':'&')+qs},hd={signal:ctl.signal,headers:{Accept:'application/json'}};
-  var r=await fetch(u(),hd);
-  if(!r.ok)throw new Error('http '+r.status);
-  var j=await r.json();
-  while(j&&j.status==='rodando'&&j.runId){await new Promise(function(z){setTimeout(z,4000)});qs.set('runId',j.runId);r=await fetch(u(),hd);if(!r.ok)throw new Error('http '+r.status);j=await r.json()}
-  var d=j&&Array.isArray(j.data)?j.data.slice():null;
-  if(!d)throw new Error('formato');
-  if(!d.length)out='<div class="empty"><b>Nenhum anúncio encontrado</b>Tente outra palavra-chave, outro país ou o status “Todos”.<br>'+btnMeta(p)+'</div>';
-  else{
-   ALL=d.filter(function(a){return a&&typeof a==='object'});ALL.forEach(function(a){a._cat=cat==='Todas'?'':cat;if(a.id)ADS[String(a.id).replace(/\D/g,'')]=a});calc();
-   out='<div id="dest"></div><div id="fpan"></div><div id="rlist"></div><p class="note">'+btnMeta(p).replace('class="btn"','class="btn o s"')+'</p>';
-  }
- }catch(err){
-  var s=err.name==='AbortError'?'A consulta demorou demais. Tente novamente.':/^http/.test(err.message)?'O servidor respondeu com erro ('+err.message.slice(5)+').':err.message==='formato'?'O servidor enviou uma resposta em formato inesperado.':'Não foi possível conectar ao servidor. Verifique o endereço, sua conexão e a permissão de acesso (CORS).';
-  out='<div class="err" role="alert">'+s+'</div><div class="empty" style="margin-top:12px">Você ainda pode consultar direto na fonte oficial.<br>'+btnMeta(p)+'</div>';
- }finally{clearTimeout(tm);$('bgo').disabled=false}
- $('rbox').innerHTML=out;if(ALL.length&&$('rlist')){painel();aplicar()}destaques()}
-function limpar(){hist=[];render()}
-function render(){document.getElementById('s1').textContent=hist.length;document.getElementById('s2').textContent=favs.length;
- document.getElementById('hbox').innerHTML=hist.length?hist.map(function(h){return '<div class="hist"><div>'+esc(h.q)+'<div class="meta" style="margin-top:3px"><span>'+h.c+' · '+h.t+'</span></div></div><button class="btn o s" data-q="'+esc(h.q)+'">Repetir</button></div>'}).join(''):'<div class="empty" style="border:0"><b>Sem pesquisas ainda</b>Suas buscas aparecerão aqui.</div>'}
-
-document.getElementById('fbox').innerHTML='<div class="empty"><b>Nenhum favorito</b>Toque na estrela de um anúncio para salvá-lo.</div><div class="ads" style="margin-top:14px">'+card()+'</div>';
-var ALL=[],ADS={},LIB='https://www.facebook.com/ads/library/?id=';
 function v(i){var e=$(i);return e?e.value:''}
 function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]+/g,' ').replace(/\s+/g,' ').trim()}
 function txt(a){return first(a.ad_creative_bodies)+' '+first(a.ad_creative_link_titles)}
 function dur(a){var s=Date.parse(a.ad_delivery_start_time);if(isNaN(s))return null;var e=a.ad_delivery_stop_time?Date.parse(a.ad_delivery_stop_time):Date.now();if(isNaN(e))e=Date.now();return Math.max(0,Math.round((e-s)/864e5))}
-function key(a,t){var x=t==='s'?Date.parse(a.ad_delivery_start_time):dur(a);return x==null||isNaN(x)?null:x}
-function ord(l,o){if(o==='relevancia')return l;var M={pontuacao:function(a){return a._s&&a._s.total},escala:function(a){return a._s&&a._s.esc},variacoes:function(a){return a._g},anuncios:function(a){return a._n}};if(M[o])return l.slice().sort(function(a,b){var x=M[o](a),y=M[o](b);if(x==null)return y==null?0:1;if(y==null)return -1;return y-x});var t=o.indexOf('data')===0?'s':'d',dir=/desc$/.test(o)?-1:1;return l.slice().sort(function(a,b){var x=key(a,t),y=key(b,t);if(x===null)return y===null?0:1;if(y===null)return -1;return (x-y)*dir})}
-function nomePl(s){s=String(s).replace(/_/g,' ').toLowerCase();return s.charAt(0).toUpperCase()+s.slice(1)}
-function toks(a){var s={};norm(txt(a)).split(' ').forEach(function(w){if(w.length>2)s[w]=1});return s}
-function jac(x,y){var i=0,u=0,k;for(k in x){u++;if(y[k])i++}for(k in y)if(!x[k])u++;return u?i/u:0}
-function agrupar(l){var gs=[],T=l.map(toks),N=l.map(function(a){return norm(txt(a))});
- l.forEach(function(a,i){var hit=null;if(a.page_name){for(var j=0;j<gs.length&&!hit;j++){var g=gs[j];if(g.p!==a.page_name)continue;if(g.m.some(function(m){return (N[m]&&N[m]===N[i])||(Object.keys(T[m]).length>=3&&Object.keys(T[i]).length>=3&&jac(T[m],T[i])>=0.6)}))hit=g}}
-  if(hit)hit.m.push(i);else gs.push({p:a.page_name,m:[i]})});
- return gs.map(function(g){return g.m.map(function(i){return l[i]})})}
-function isFav(id){return favs.some(function(a){return String(a.id)===id})}
-function loadFavs(){try{favs=JSON.parse(localStorage.getItem('np_fav')||'[]')}catch(e){favs=[]}if(!Array.isArray(favs))favs=[];favs.forEach(function(a){if(a&&a.id)ADS[String(a.id)]=a})}
-function saveFavs(){try{localStorage.setItem('np_fav',JSON.stringify(favs))}catch(e){}}
-function toggleFav(id){var a=ADS[id];if(isFav(id))favs=favs.filter(function(x){return String(x.id)!==id});else if(a){a._salvo=new Date().toLocaleDateString('pt-BR');favs.push(a)}saveFavs();render();renderFavs();aplicar()}
-function renderFavs(){var c=v('fcat'),l=favs.filter(function(a){return !c||a._cat===c});$('fbox').innerHTML=!favs.length?'<div class="empty"><b>Nenhum favorito</b>Toque na estrela de um anúncio dos resultados para salvá-lo aqui.</div>':!l.length?'<div class="empty"><b>Nenhum favorito nesta categoria</b></div>':'<div class="ads">'+l.map(function(a){var i=String(a.id).replace(/\D/g,'');return '<div>'+cardAd(a)+'<div class="panel" style="margin:6px 0 0;font-size:12px">'+(a._salvo?'Salvo em '+a._salvo+(a._pesq?' · pesquisado em '+a._pesq:'')+'<br>':'')+'<textarea class="inp" style="max-width:100%;width:100%;margin-top:6px" maxlength="300" placeholder="Nota pessoal…" onchange="nota(\''+i+'\',this.value)">'+esc(a._nota||'')+'</textarea></div></div>'}).join('')+'</div>'}
-function cardAd(a,g){g=g||[a];var c=first(a.ad_creative_bodies),t=first(a.ad_creative_link_titles),id=String(a.id||'').replace(/\D/g,''),d=dur(a),pl=Array.isArray(a.publisher_platforms)?a.publisher_platforms.map(nomePl).join(', '):'',f=id&&isFav(id);
- var vr=g.length>1?'<details style="font-size:12px;color:var(--mu)"><summary style="cursor:pointer;color:var(--g)">Ver variações</summary><div style="margin:6px 0">Agrupadas por texto parecido do mesmo anunciante. Pode haver erros.</div>'+g.map(function(x){var xi=String(x.id||'').replace(/\D/g,'');return '<div style="padding:6px 0;border-top:1px solid var(--line)">'+fdata(x.ad_delivery_start_time)+' · '+esc((first(x.ad_creative_bodies)||first(x.ad_creative_link_titles)||'Sem texto').slice(0,90))+(xi?' · <a href="'+LIB+xi+'" target="_blank" rel="noopener noreferrer" style="color:var(--g)">abrir</a>':'')+'</div>'}).join('')+'</details>':'';
- return '<article class="ad"><div class="ph">Prévia disponível no anúncio original</div><div class="ab">'+(a._cat?'<span class="badge" style="align-self:flex-start">'+esc(a._cat)+'</span>':'')+(g.length>1?'<span class="badge" style="align-self:flex-start;color:var(--g);border-color:var(--g)">'+g.length+' variações semelhantes</span>':'')+(t?'<b>'+esc(t)+'</b>':'')+'<div style="font-size:13px;color:var(--mu)">'+(c?esc(c.slice(0,220))+(c.length>220?'…':''):'Texto não informado')+'</div><div class="meta"><span>Anunciante: <b>'+esc(a.page_name||'Não informado')+'</b></span></div><div class="meta"><span>Início: <b>'+fdata(a.ad_delivery_start_time)+'</b></span>'+(a.ad_delivery_stop_time?'<span>Fim: <b>'+fdata(a.ad_delivery_stop_time)+'</b></span>':'')+'</div>'+(d!==null?'<div class="meta"><span>Veiculação: <b>'+d+' dia(s)</b>'+(a.ad_delivery_stop_time?'':' (até hoje)')+'</span></div>':'')+(pl?'<div class="meta"><span>Plataformas: <b>'+esc(pl)+'</b></span></div>':'')+scoreHtml(a)+vr+(id?'<div class="row"><button class="btn o s" data-an="'+id+'">Analisar oferta</button><label class="chip" style="display:flex;gap:6px;align-items:center;flex:none"><input type="checkbox" data-cmp="'+id+'"'+(CMP.indexOf(id)>-1?' checked':'')+'> Comparar</label></div>':'')+'<div class="row">'+(id?'<a class="btn s" href="'+LIB+id+'" target="_blank" rel="noopener noreferrer">Ver anúncio original</a><button class="ic" data-fav="'+id+'" aria-label="Favoritar" aria-pressed="'+!!f+'">'+(f?'★':'☆')+'</button>':'<button class="btn s" disabled style="opacity:.55">Link indisponível</button>')+'</div></div></article>'}
 function opt(x,t){return '<option value="'+esc(x)+'">'+esc(t||x)+'</option>'}
-function painel(){var adv=[],pls=[],hasD=false,hasF=false,hasN=false,na=[];
- ALL.forEach(function(a){if(a.page_name&&adv.indexOf(a.page_name)<0)adv.push(a.page_name);(Array.isArray(a.publisher_platforms)?a.publisher_platforms:[]).forEach(function(x){if(pls.indexOf(x)<0)pls.push(x)});if(!isNaN(Date.parse(a.ad_delivery_start_time)))hasD=true;if(a.ad_delivery_stop_time)hasF=true;else hasN=true});
- var h='<div class="panel"><b>Filtros dos resultados</b><div class="filters" style="margin-top:10px"><label>Palavra-chave<input class="inp" id="fkw" style="max-width:100%" oninput="aplicar()" placeholder="Filtrar texto…"></label>';
- if(adv.length>1)h+='<label>Anunciante<select id="fadv" onchange="aplicar()"><option value="">Todos</option>'+adv.sort().map(function(x){return opt(x)}).join('')+'</select></label>';else na.push('anunciante');
- if(pls.length>1)h+='<label>Plataforma<select id="fplat" onchange="aplicar()"><option value="">Todas</option>'+pls.map(function(x){return opt(x,nomePl(x))}).join('')+'</select></label>';else na.push('plataforma');
- if(hasD)h+='<label>Início a partir de<input class="inp" type="date" id="fde" style="max-width:100%" onchange="aplicar()"></label><label>Início até<input class="inp" type="date" id="fate" style="max-width:100%" onchange="aplicar()"></label>';else na.push('data de início');
- if(hasF&&hasN)h+='<label>Situação<select id="fsit" onchange="aplicar()"><option value="">Todas</option><option value="semfim">Sem data de fim informada</option><option value="fim">Com data de fim</option></select></label>';else na.push('situação');
- if(ALL.some(function(a){return first(a.ad_creative_link_captions)}))h+='<label style="flex-direction:row;align-items:center;gap:8px;font-size:13px;color:var(--tx)"><input type="checkbox" id="fdest" onchange="aplicar()" style="width:20px;height:20px;accent-color:#39ff14">Só com destino informado</label>';else na.push('destino');h+='</div><div class="field"><div>Agrupar anúncios semelhantes<small>Mesmo anunciante e texto parecido</small></div><input type="checkbox" id="fgrp" checked onchange="aplicar()" style="width:22px;height:22px;accent-color:#39ff14"></div><div class="meta"><span id="fcount"></span><button class="btn o s" onclick="limparF()">Limpar filtros</button></div>'+(na.length?'<p class="note" style="text-align:left">Filtros indisponíveis nesta pesquisa (dados não informados ou sem variação): '+na.join(', ')+'.</p>':'')+'<p class="note" style="text-align:left">Tempo no ar e anúncio ativo não indicam lucro ou resultado. A Meta não informa vendas, faturamento nem conversão.</p></div>';
- $('fpan').innerHTML=h}
-function limparF(){['fkw','fadv','fplat','fde','fate','fsit'].forEach(function(i){if($(i))$(i).value=''});if($('fdest'))$('fdest').checked=false;aplicar()}
-function aplicar(){if(!$('rlist'))return;var kw=norm(v('fkw')),adv=v('fadv'),pl=v('fplat'),de=v('fde'),ate=v('fate'),sit=v('fsit');
- var l=ALL.filter(function(a){if(kw&&norm(txt(a)+' '+a.page_name).indexOf(kw)<0)return false;if(adv&&a.page_name!==adv)return false;if(pl&&!(Array.isArray(a.publisher_platforms)&&a.publisher_platforms.indexOf(pl)>-1))return false;var s=Date.parse(a.ad_delivery_start_time);if(de&&(isNaN(s)||s<Date.parse(de)))return false;if(ate&&(isNaN(s)||s>Date.parse(ate)+864e5-1))return false;if($('fdest')&&$('fdest').checked&&!first(a.ad_creative_link_captions))return false;if(sit==='fim'&&!a.ad_delivery_stop_time)return false;if(sit==='semfim'&&a.ad_delivery_stop_time)return false;return true});
- l=ord(l,v('ordem'));var gr=$('fgrp')&&$('fgrp').checked,gs=gr?agrupar(l):l.map(function(a){return [a]});
- $('fcount').textContent=l.length+' de '+ALL.length+' anúncios'+(gr?' · '+gs.length+' grupos':'');
- $('rlist').innerHTML=gs.length?'<div class="ads">'+gs.map(function(g){return cardAd(g[0],g)}).join('')+'</div>':'<div class="empty"><b>Nenhum anúncio corresponde aos filtros</b><button class="btn o s" onclick="limparF()">Limpar filtros</button></div>'}
-document.addEventListener('click',function(e){var f=e.target.closest('[data-fav]');if(f)toggleFav(f.dataset.fav);if(e.target.closest('.chip')){var n=$('catnote');if(n)n.textContent=cat==='Campanhas legítimas de arrecadação'?'Atenção: a categoria é só um rótulo e não verifica legitimidade. Confira o anunciante e a origem do pedido de doação.':'Categoria: rótulo para organizar pesquisas e favoritos. A Meta não filtra por categoria, então use palavras-chave na busca.'}});
-var LASTK='',CMP=[],CTA=/\b(compre|comprar|garanta|garantir|aproveite|saiba mais|clique|acesse|peça|baixe|cadastre|comece|experimente|assine|agende|doe|contribua|participe|inscreva)/i;
 function preco(a){var m=txt(a).match(/R\$\s?\d[\d.]*(?:,\d{2})?/);return m?m[0]:''}
 function scoreAd(a){var P=[],T=txt(a).trim(),d=dur(a),N={t:'Tempo de veiculação',v:'Variações de criativo',a:'Anúncios do mesmo anunciante',c:'Clareza da oferta',x:'Chamada para ação'};
  function add(k,max,pts,why){P.push({k:k,lab:N[k],max:max,pts:pts,why:why})}
@@ -375,70 +264,9 @@ function scoreAd(a){var P=[],T=txt(a).trim(),d=dur(a),N={t:'Tempo de veiculaçã
  var tot=0,mx=0,es=0,em=0,got={};P.forEach(function(p){got[p.k]=1;tot+=p.pts;mx+=p.max;if('tva'.indexOf(p.k)>-1){es+=p.pts;em+=p.max}});
  var fl=Object.keys(N).filter(function(k){return !got[k]}).map(function(k){return N[k]});fl.push('Qualidade da página de destino (não verificável pela API)');
  return {parts:P,total:mx<45?null:Math.round(tot/mx*100),esc:em<35?null:Math.round(es/em*100),conf:mx<45?'dados insuficientes':mx/85>=.9?'alta':mx/85>=.6?'média':'baixa',faltam:fl}}
-function calc(){var n={},hoje=new Date().toLocaleDateString('pt-BR');ALL.forEach(function(a){if(a.page_name)n[a.page_name]=(n[a.page_name]||0)+1});agrupar(ALL).forEach(function(g){g.forEach(function(a){a._g=g.length})});ALL.forEach(function(a){a._n=a.page_name?n[a.page_name]:null;a._pesq=hoje;a._pais=$('pais').value;a._q=norm($('q2').value);a._s=scoreAd(a)});snap();radarHome()}
-function partes(s){return s.parts.map(function(p){return '<div style="padding:5px 0;border-top:1px solid var(--line)"><b style="color:var(--tx)">'+p.lab+': '+p.pts+'/'+p.max+'</b><br>'+esc(p.why)+'</div>'}).join('')+'<div style="padding:5px 0;border-top:1px solid var(--line)">Não avaliado: '+esc(s.faltam.join('; '))+'.</div><div style="padding:5px 0;border-top:1px solid var(--line)">Nota de 0 a 100 calculada só com os critérios disponíveis. É uma estimativa por sinais públicos; não indica vendas, lucro nem resultado.</div>'}
-function scoreHtml(a){var s=a._s||(a._s=scoreAd(a));return '<div style="border:1px solid var(--line);border-radius:12px;padding:10px;font-size:12px"><div class="meta"><span>Potencial de teste (estimativa)</span><b style="color:var(--g)">'+(s.total==null?'Dados insuficientes':s.total+'/100')+'</b></div><div class="meta"><span>Sinais de escalabilidade</span><b>'+(s.esc==null?'—':s.esc+'/100')+'</b></div><div class="meta"><span>Confiança</span><b>'+s.conf+'</b></div><details style="margin-top:6px;color:var(--mu)"><summary style="cursor:pointer;color:var(--g)">Por que esta nota?</summary>'+partes(s)+'</details></div>'}
-function destaques(){var gs=ALL.length?agrupar(ALL).filter(function(g){return g[0]._s&&g[0]._s.esc!=null}).sort(function(x,y){return y[0]._s.esc-x[0]._s.esc}).slice(0,3):[],h=gs.length?'<p class="note" style="text-align:left;margin:0 0 10px">Ordenadas por sinais de escalabilidade (tempo no ar, variações e anúncios do anunciante). Não são resultados de vendas.</p><div class="hs">'+gs.map(function(g){return cardAd(g[0],g)}).join('')+'</div>':'',H=$('previa'),R=$('dest');
- if(H){H.className='';H.innerHTML=h||'<div class="empty"><b>Sem ofertas para destacar</b>Faça uma pesquisa com a integração configurada. Os destaques usam só sinais observáveis nos anúncios retornados.</div>'}
- if(R)R.innerHTML=h?'<div class="sec"><h3>Ofertas em Destaque — Mais Escaladas</h3><span class="badge">sinais observáveis</span></div>'+h:''}
-function nota(id,t){var a=ADS[id];if(a){a._nota=t.slice(0,300);saveFavs()}}
-function sync(){document.querySelectorAll('[data-cmp]').forEach(function(c){c.checked=CMP.indexOf(c.dataset.cmp)>-1})}
-function cmpBar(){var b=$('cmpbar');b.style.display=CMP.length?'flex':'none';b.innerHTML='<span>'+CMP.length+' de 3 selecionadas</span><span><button class="btn s" onclick="comparar()"'+(CMP.length<2?' disabled style="opacity:.55"':'')+'>Comparar</button> <button class="btn o s" onclick="CMP=[];cmpBar();sync()">Limpar</button></span>'}
-function comparar(){var L=CMP.map(function(i){return ADS[i]}).filter(Boolean);if(L.length<2)return;
- var S=function(a){return a._s||(a._s=scoreAd(a))};
- var R=[['Oferta',function(a){return esc(String(first(a.ad_creative_link_titles)||a.page_name||'Anúncio '+a.id))}],['Anunciante',function(a){return esc(a.page_name||'Não informado')}],['Nicho (rótulo da pesquisa)',function(a){return esc(a._cat||'Não informado')}],['Proposta de valor (texto do anúncio)',function(a){var c=first(a.ad_creative_bodies);return c?esc(c.slice(0,140))+(c.length>140?'…':''):'Não informado'}],['Preço citado no texto',function(a){return esc(preco(a)||'Não informado')}],['Tipo de criativo',function(){return 'Não informado pela API'}],['Variações semelhantes',function(a){return a._g==null?'—':a._g}],['Tempo de veiculação',function(a){var d=dur(a);return d===null?'Não informado':d+' dia(s)'+(a.ad_delivery_stop_time?'':' (até hoje)')}],['Página de destino (domínio)',function(a){return esc(first(a.ad_creative_link_captions)||'Não informada')}],['Potencial de teste',function(a){var s=S(a);return s.total==null?'Dados insuficientes':s.total+'/100 · confiança '+s.conf}],['Sinais de escalabilidade',function(a){var s=S(a);return s.esc==null?'—':s.esc+'/100'}],['Anúncio original',function(a){return '<a href="'+LIB+String(a.id).replace(/\D/g,'')+'" target="_blank" rel="noopener noreferrer" style="color:var(--g)">Abrir</a>'}]];
- var b=null;L.forEach(function(a){if(S(a).total!==null&&(!b||S(a).total>S(b).total))b=a});
- var con=b?'Considerando apenas os sinais observáveis, “'+esc(String(first(b.ad_creative_link_titles)||b.page_name||b.id))+'” tem a maior pontuação de potencial de teste ('+S(b).total+'/100). Isso indica só que há mais sinais públicos para investigar, não que venda mais. Antes de testar, confira a página de destino, o preço e a política da plataforma.':'Não há dados suficientes para indicar qual oferta testar primeiro.';
- $('comparar').innerHTML='<button class="btn o s" data-back>← Voltar</button><h2 style="margin-top:12px">Comparador de ofertas</h2><p class="pg-sub">Dados da Biblioteca de Anúncios. Campos ausentes aparecem como “Não informado”.</p><div style="overflow-x:auto"><table class="tb" style="border-collapse:collapse;width:100%;min-width:'+(110+L.length*170)+'px;font-size:12px">'+R.map(function(r){return '<tr><th>'+r[0]+'</th>'+L.map(function(a){return '<td>'+r[1](a)+'</td>'}).join('')+'</tr>'}).join('')+'</table></div><div class="panel" style="margin-top:12px"><b>Qual testar primeiro?</b><p style="font-size:13px;margin-top:6px">'+con+'</p></div><div class="panel"><b>Limitações</b><p class="pg-sub" style="margin:6px 0 0">A Biblioteca não informa vendas, faturamento, conversão nem investimento. Qualidade da página, preço real e tipo de criativo não são verificados. Isto apoia a escolha do que investigar, não garante resultado.</p></div>';go('comparar')}
-function analisarAntigo(id){var a=ADS[id];if(!a)return;var s=a._s||(a._s=scoreAd(a)),c=first(a.ad_creative_bodies),t=first(a.ad_creative_link_titles),d=dur(a),cap=first(a.ad_creative_link_captions),pl=Array.isArray(a.publisher_platforms)?a.publisher_platforms.map(nomePl).join(', '):'',R=function(k,x){return '<div class="field"><div>'+k+'</div><div style="text-align:right;max-width:60%">'+x+'</div></div>'};
- $('analise').innerHTML='<button class="btn o s" data-back="'+(a._manual?'inicio':'resultados')+'">← Voltar</button><h2 style="margin-top:12px">'+esc(String(t||a.page_name||'Anúncio '+id))+'</h2><p class="pg-sub">Anúncio '+esc(id)+(a._pesq?' · pesquisado em '+a._pesq:'')+'</p>'
- +'<div class="panel"><h2>'+(a._manual?'Dados informados por você':'Dados verificados')+'</h2><p class="pg-sub">'+(a._manual?'Digitados por você a partir do anúncio. O app não consegue verificar estes dados.':'Informados pela Biblioteca de Anúncios da Meta.')+'</p>'+R('Anunciante',esc(a.page_name||'Não informado'))+R('Início',fdata(a.ad_delivery_start_time))+R('Fim',a.ad_delivery_stop_time?fdata(a.ad_delivery_stop_time):'Não informado')+R('Veiculação',d===null?'Não informado':d+' dia(s)'+(a.ad_delivery_stop_time?'':' (até hoje)'))+R('Plataformas',esc(pl||'Não informado'))+R('Destino (domínio)',esc(cap||'Não informado'))+'<div style="margin-top:10px;font-size:13px;white-space:pre-wrap">'+(c?esc(c):'Texto não informado')+'</div></div>'
- +'<div class="panel"><h2>Sinais detectados no texto</h2><p class="pg-sub">Leitura automática simples; confira no anúncio original.</p>'+R('Preço citado',esc(preco(a)||'Nenhum'))+R('Chamada para ação',CTA.test(txt(a))?'Verbo de ação detectado':'Nenhuma detectada')+'</div>'
- +'<div class="panel"><h2>Pontuação: '+(s.total==null?'Dados insuficientes':s.total+'/100')+'</h2><p class="pg-sub">Confiança '+s.conf+' · Escalabilidade '+(s.esc==null?'—':s.esc+'/100')+'</p><div style="font-size:12px;color:var(--mu)">'+partes(s)+'</div></div>'
- +'<div class="panel"><h2>O que não dá para afirmar</h2><p class="pg-sub" style="margin:6px 0 0">Vendas, faturamento, ROAS, conversões, investimento, público real e qualidade da página de destino não são informados pela Biblioteca. Tempo no ar e variações são hipóteses de operação contínua, não prova de lucro.</p></div>'
- +'<div class="panel"><h2>Análise com IA</h2><p class="pg-sub">Não configurada. Resumo, público provável, promessa, benefícios, objeções, pontos fortes e fracos, melhorias e ideias de criativos exigem um servidor com IA. Quando ativa, o resultado deve separar o que é verificado do que é hipótese.</p><button class="btn s" disabled style="opacity:.55">Gerar análise com IA</button></div>'
- +'<a class="btn" href="'+LIB+esc(id)+'" target="_blank" rel="noopener noreferrer">Ver anúncio original</a>';go('analise')}
-document.addEventListener('click',function(e){var x=e.target.closest('[data-an]');if(x)analisar(x.dataset.an);var bk=e.target.closest('[data-back]');if(bk)go(bk.dataset.back||'resultados')});
-document.addEventListener('change',function(e){var c=e.target.closest&&e.target.closest('[data-cmp]');if(!c)return;var id=c.dataset.cmp,i=CMP.indexOf(id);if(c.checked){if(CMP.length>=3){c.checked=false;return}if(i<0)CMP.push(id)}else if(i>-1)CMP.splice(i,1);cmpBar();sync()});
-var IMP=[],RK={verificado:4,informado:3,sinais:2,insuf:1},NV={verificado:'ROI verificado',informado:'ROI informado',sinais:'Sinais de escala',insuf:'Dados insuficientes'},EXS='anunciante;oferta;receita;custo_anuncios;outros_custos;origem;data\nEXEMPLO Loja A;Produto de teste A;15000,00;6000,00;3000,00;relatorio;2026-09-30\nEXEMPLO Loja B;Produto de teste B;8000,00;5000,00;2000,00;declarado;2026-09-30';
 function fmt(n){return n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}
-function loadImp(){try{IMP=JSON.parse(localStorage.getItem('np_imp')||'[]')}catch(e){IMP=[]}if(!Array.isArray(IMP))IMP=[]}
-function saveImp(){try{localStorage.setItem('np_imp',JSON.stringify(IMP))}catch(e){}}
-function initRadar(){$('rni').innerHTML='<option value="">Todos</option>'+CATS.slice(1).map(function(c){return opt(c)}).join('');radarHome()}
 function num(s){s=String(s==null?'':s).replace(/R\$|\s/g,'');if(!s)return null;if(s.indexOf(',')>-1)s=s.replace(/\./g,'').replace(',','.');var n=Number(s);return isFinite(n)&&n>=0?n:NaN}
-function lerArq(el){var f=el.files[0];if(!f)return;if(f.size>1e6){$('impmsg').innerHTML='<div class="err">Arquivo grande demais (máximo 1 MB).</div>';return}var r=new FileReader();r.onload=function(){$('imptxt').value=String(r.result)};r.readAsText(f)}
-function limparImp(){IMP=[];saveImp();$('impmsg').innerHTML='';radarRender();radarHome()}
-function importar(){var t=$('imptxt').value.trim(),m=$('impmsg');if(!t){m.innerHTML='<div class="err">Cole ou escolha um arquivo CSV.</div>';return}
- var ls=t.split(/\r?\n/).filter(function(l){return l.trim()}),sep=ls[0].indexOf(';')>-1?';':',',H=ls[0].split(sep).map(function(h){return norm(h).replace(/ /g,'_')}),er=[],nv=[];
- var ix=function(ns){for(var i=0;i<ns.length;i++){var j=H.indexOf(ns[i]);if(j>-1)return j}return -1},c={an:ix(['anunciante']),of:ix(['oferta','produto']),re:ix(['receita','receita_atribuida']),ca:ix(['custo_anuncios','investimento','gasto','custo']),ou:ix(['outros_custos']),or:ix(['origem']),dt:ix(['data','periodo'])};
- if(c.an<0||c.re<0||c.ca<0){m.innerHTML='<div class="err">Cabeçalho inválido. São obrigatórias as colunas: anunciante, receita e custo_anuncios.</div>';return}
- ls.slice(1).forEach(function(l,i){var p=l.split(sep),g=function(j){return j<0?'':(p[j]||'').trim()},re=num(g(c.re)),ca=num(g(c.ca)),ou=g(c.ou)?num(g(c.ou)):0,an=g(c.an);
-  if(!an||re==null||ca==null||isNaN(re)||isNaN(ca)||isNaN(ou)||(ca+ou)<=0){er.push(i+2);return}
-  nv.push({anunciante:an.slice(0,120),oferta:g(c.of).slice(0,120),receita:re,custo_anuncios:ca,outros:ou,origem:norm(g(c.or))==='relatorio'?'relatorio':'declarado',data:g(c.dt).slice(0,10),ex:/^exemplo/i.test(an)})});
- if(!nv.length){m.innerHTML='<div class="err">Nenhuma linha válida. Linhas ignoradas: '+er.slice(0,10).join(', ')+'.</div>';return}
- IMP=IMP.concat(nv).slice(-500);saveImp();$('imptxt').value='';
- m.innerHTML='<div class="empty" style="padding:12px">'+nv.length+' linha(s) importada(s).'+(er.length?' Ignoradas por dados inválidos, nas linhas: '+er.slice(0,10).join(', ')+'.':'')+'</div>';radarRender();radarHome()}
-function snap(){var S={};try{S=JSON.parse(localStorage.getItem('np_snap')||'{}')}catch(e){}var d=new Date().toISOString().slice(0,10);ALL.forEach(function(a){if(!a.page_name)return;var k=a._q+'|'+norm(a.page_name)+'|'+a._pais,L=S[k]=S[k]||[],last=L[L.length-1];if(last&&last.d===d)last.n=a._n;else L.push({d:d,n:a._n});if(L.length>20)L.shift()});try{localStorage.setItem('np_snap',JSON.stringify(S))}catch(e){}}
-function evol(a){var S={};try{S=JSON.parse(localStorage.getItem('np_snap')||'{}')}catch(e){}var L=S[(a._q||'')+'|'+norm(a.page_name||'')+'|'+a._pais]||[];return L.length>=2?L[0].n+' → '+L[L.length-1].n+' anúncios ('+L.length+' dias de consulta)':'Não disponível (sem histórico)'}
 function sinaisOf(a,g){var d=dur(a),k=0,t=[];if(d!==null&&d>=60){k++;t.push(d+' dias no ar')}if(g.length>=3){k++;t.push(g.length+' variações')}if(a._n>=5){k++;t.push(a._n+' anúncios do anunciante')}return {ok:d!==null&&d>=60&&k>=2,t:t}}
-function roiOf(R){if(!R)return null;var rec=0,ca=0,ou=0,n=0,ver=true,ex=false,dt='';R.forEach(function(r){rec+=r.receita;ca+=r.custo_anuncios;ou+=r.outros||0;n++;if(r.origem!=='relatorio')ver=false;if(r.ex)ex=true;if(r.data>dt)dt=r.data});var c=ca+ou;if(!n||c<=0)return null;return {roi:(rec-c)/c*100,rec:rec,ca:ca,ou:ou,cust:c,ver:ver,ex:ex,data:dt}}
-function roiHtml(x){if(!x)return '<div>ROI: Não disponível</div>';return '<div><b>ROI '+x.roi.toFixed(1).replace('.',',')+'%</b> ('+(x.ver?'verificado':'informado, não verificado')+')</div><details style="color:var(--mu)"><summary style="cursor:pointer;color:var(--g)">Cálculo</summary>Receita '+fmt(x.rec)+'<br>Custos incluídos: anúncios '+fmt(x.ca)+(x.ou?' + outros '+fmt(x.ou):'')+' = '+fmt(x.cust)+'<br>ROI = (receita − custos) ÷ custos × 100<br>ROAS (medida à parte): '+(x.ca>0?(x.rec/x.ca).toFixed(2).replace('.',',')+'×':'Não disponível')+'</details>'+(x.ex?'<div class="badge">DADOS DE EXEMPLO</div>':'')}
-function radarRows(){var map={},used={},rows=[];IMP.forEach(function(r){var k=norm(r.anunciante);(map[k]=map[k]||[]).push(r)});
- if(ALL.length)agrupar(ALL).forEach(function(g){var a=g[0],k=norm(a.page_name||''),R=map[k]||null;if(R)used[k]=1;rows.push({a:a,nome:String(first(a.ad_creative_link_titles)||a.page_name||'Anúncio '+a.id),anun:a.page_name||'Não informado',dias:dur(a),crit:g.length,nAn:a._n,evo:evol(a),roi:roiOf(R),si:sinaisOf(a,g),esc:a._s?a._s.esc:null,dt:Date.parse(a.ad_delivery_start_time),nicho:a._cat||'',pais:a._pais||'',fonte:'Biblioteca de Anúncios da Meta · pesquisado em '+(a._pesq||'—'),id:String(a.id||'').replace(/\D/g,'')})});
- Object.keys(map).forEach(function(k){if(used[k])return;var R=map[k],ro=roiOf(R);rows.push({a:null,nome:R[0].oferta||R[0].anunciante,anun:R[0].anunciante,dias:null,crit:null,nAn:null,evo:'Não disponível',roi:ro,si:{ok:false,t:[]},esc:null,dt:ro?Date.parse(ro.data):NaN,nicho:'',pais:'',fonte:'Importação própria',id:''})});
- rows.forEach(function(r){r.nv=r.roi?(r.roi.ver?'verificado':'informado'):(r.si.ok?'sinais':'insuf')});return rows}
-function radarRender(){var T=$('rtab');if(!T)return;var rs=radarRows(),tot=rs.length,q=norm(v('rq')),ni=v('rni'),pa=v('rpa'),pe=v('rpe'),ev=v('rev');
- rs=rs.filter(function(r){if(q&&norm(r.nome+' '+r.anun).indexOf(q)<0)return false;if(ni&&r.nicho!==ni)return false;if(pa&&r.pais!==pa)return false;if(pe&&!(r.dt&&Date.now()-r.dt<=pe*864e5))return false;var ro=r.roi?r.roi.roi:null;if(ev==='rv')return !!(r.roi&&r.roi.ver&&ro>0);if(/^r\d+$/.test(ev))return ro!==null&&ro>Number(ev.slice(1));if(ev==='insuf')return r.nv==='insuf';if(ev==='sinais')return r.si.ok&&!(r.roi&&r.roi.ver);return true});
- rs.sort(function(x,y){return RK[y.nv]-RK[x.nv]||(y.roi?y.roi.roi:-1e9)-(x.roi?x.roi.roi:-1e9)||(y.esc||-1)-(x.esc||-1)});
- if(!tot){T.innerHTML='<div class="empty"><b>Nenhuma oferta para classificar</b>Faça uma pesquisa com a integração configurada ou importe relatórios de campanhas próprias abaixo.</div>';return}
- if(!rs.length){T.innerHTML='<div class="empty"><b>Nenhuma oferta corresponde aos filtros</b></div>';return}
- T.innerHTML='<div class="meta" style="margin-bottom:8px"><span>'+rs.length+' oferta(s)</span></div><div style="overflow-x:auto"><table class="tb rk" style="border-collapse:collapse;width:100%;min-width:820px;font-size:12px"><tr><th>#</th><th>Oferta</th><th>Anunciante</th><th>Tempo</th><th>Criativos</th><th>Evolução</th><th>Evidência</th><th>Fonte e data</th><th>Ações</th></tr>'+rs.map(function(r,i){
-  var nt=r.nv==='sinais'?'Sinais: '+r.si.t.join('; '):r.nv==='insuf'?(r.dias===null&&r.a?'Sem data de início informada':r.a?'Sinais de escala abaixo do critério ('+(r.si.t.join('; ')||'nenhum')+')':'Sem anúncios na pesquisa atual para este anunciante'):(r.a&&r.si.t.length?'Sinais: '+r.si.t.join('; '):'');
-  return '<tr><td>'+(i+1)+'</td><td>'+esc(r.nome)+(r.roi&&r.roi.ex?'<br><span class="badge">DADOS DE EXEMPLO</span>':'')+'</td><td>'+esc(r.anun)+'</td><td>'+(r.dias===null?'Não disponível':r.dias+' dia(s)')+'</td><td>'+(r.crit==null?'Não disponível':r.crit+' variação(ões)<br>'+(r.nAn||'—')+' anúncio(s) do anunciante')+'</td><td>'+esc(r.evo)+'</td><td><span class="ev '+r.nv+'">'+NV[r.nv]+'</span>'+(nt?'<div style="color:var(--mu);margin-bottom:6px">'+esc(nt)+'</div>':'')+roiHtml(r.roi)+'</td><td>'+esc(r.fonte)+(r.roi?'<br>ROI: '+(r.roi.ex?'exemplo':'importação própria')+(r.roi.data?' · '+fdata(r.roi.data):''):'')+'</td><td>'+(r.id?'<div style="display:flex;flex-direction:column;gap:6px"><button class="btn s" data-an="'+r.id+'">Analisar</button><a class="btn o s" href="'+LIB+r.id+'" target="_blank" rel="noopener noreferrer">Anúncio original</a></div>':'Anúncio original: Não disponível')+'</td></tr>'}).join('')+'</table></div>'}
-function radarHome(){var el=$('rhome');if(!el)return;var rs=radarRows(),c={verificado:0,informado:0,sinais:0,insuf:0};rs.forEach(function(r){c[r.nv]++});var inv=rs.filter(function(r){return r.si.ok&&!(r.roi&&r.roi.ver)}).slice(0,3);
- el.innerHTML='<div class="sec"><h3>Radar de ofertas vencedoras</h3><button class="btn o s" data-pg="radar">Abrir radar</button></div><div class="grid"><div class="stat"><small>ROI verificado</small><div>'+c.verificado+'</div></div><div class="stat"><small>ROI informado</small><div>'+c.informado+'</div></div><div class="stat"><small>Sinais de escala</small><div>'+c.sinais+'</div></div><div class="stat"><small>Dados insuficientes</small><div>'+c.insuf+'</div></div></div><p class="note" style="text-align:left">Merecem investigação (sinais de escala, sem ROI verificado): '+(inv.length?inv.map(function(r){return esc(r.nome)}).join(', '):'nenhuma por enquanto')+'. Fonte: sua última pesquisa e relatórios importados.</p>'}
-document.addEventListener('click',function(e){var x=e.target.closest('[data-pg]');if(x)go(x.dataset.pg)});
-var MAN=[];
 function loadMan(){try{MAN=JSON.parse(localStorage.getItem('np_man')||'[]')}catch(e){MAN=[]}if(!Array.isArray(MAN))MAN=[];MAN.forEach(function(a){if(a&&a.id)ADS[String(a.id)]=a})}
 function saveMan(){try{localStorage.setItem('np_man',JSON.stringify(MAN))}catch(e){}}
 function idDoLink(u){var x;try{x=new URL(String(u).trim())}catch(e){return {erro:'Cole um link completo, começando com https://'}}
@@ -447,17 +275,6 @@ function idDoLink(u){var x;try{x=new URL(String(u).trim())}catch(e){return {erro
  if(!id&&x.searchParams.get('view_all_page_id'))return {erro:'Esse link é de uma página, não de um anúncio. Abra um anúncio e copie o link que tem id=…'};
  if(!/^\d{8,20}$/.test(id))return {erro:'Não encontrei o número do anúncio (id=…) no link.'};
  return {id:id}}
-function initMan(){var n=$('ln');if(n)n.innerHTML='<option value="">Sem categoria</option>'+CATS.slice(1).map(function(c){return opt(c)}).join('');renderMan()}
-function analisarLink(){var m=$('lmsg'),r=idDoLink($('lk').value),t=$('lt').value.trim(),ds=v('lds'),df=v('ldf'),g=v('lg'),n=v('lna'),err=r.erro||(!t?'Cole o texto do anúncio para a análise funcionar.':'');
- if(!err&&ds&&df&&df<ds)err='A data de fim não pode ser antes do início.';
- if(!err&&((g&&!(+g>=1&&+g<=999&&Math.floor(+g)===+g))||(n&&!(+n>=1&&+n<=9999&&Math.floor(+n)===+n))))err='Use números inteiros positivos nos campos de quantidade.';
- if(err){m.innerHTML='<div class="err" role="alert">'+esc(err)+'</div>';return}
- m.innerHTML='';
- var tt=v('ltit').trim(),dm=v('ldom').trim(),a={id:r.id,page_name:v('lan').trim().slice(0,120),ad_creative_bodies:[t.slice(0,2000)],ad_creative_link_titles:tt?[tt.slice(0,200)]:[],ad_creative_link_captions:dm?[dm.slice(0,200)]:[],ad_delivery_start_time:ds||null,ad_delivery_stop_time:df||null,_cat:v('ln'),_g:g?+g:null,_n:n?+n:null,_pesq:new Date().toLocaleDateString('pt-BR'),_manual:true},f0=favs.filter(function(x){return String(x.id)===a.id})[0];
- if(f0){a._salvo=f0._salvo;a._nota=f0._nota;favs=favs.map(function(x){return String(x.id)===a.id?a:x});saveFavs()}
- a._s=scoreAd(a);ADS[a.id]=a;MAN=MAN.filter(function(x){return x.id!==a.id});MAN.unshift(a);MAN=MAN.slice(0,100);saveMan();renderMan();analisar(a.id)}
-function renderMan(){var b=$('minhas');if(!b)return;b.innerHTML=MAN.length?'<div class="sec"><h3>Meus anúncios analisados</h3><span class="badge">dados informados por você</span></div>'+MAN.map(function(a){var f=isFav(a.id),s=a._s;return '<div class="panel" style="padding:12px"><b>'+esc(String(first(a.ad_creative_link_titles)||a.page_name||'Anúncio '+a.id))+'</b><div class="meta" style="margin:6px 0"><span>'+esc(a.page_name||'Anunciante não informado')+'</span><span>'+(s&&s.total!=null?s.total+'/100':'Dados insuficientes')+'</span></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn s" data-an="'+a.id+'">Ver análise</button><a class="btn o s" href="'+LIB+a.id+'" target="_blank" rel="noopener noreferrer">Anúncio original</a><button class="ic" style="height:36px" data-fav="'+a.id+'" aria-label="Favoritar">'+(f?'★':'☆')+'</button><button class="btn o s" data-rm="'+a.id+'">Remover</button></div></div>'}).join(''):''}
-document.addEventListener('click',function(e){var r=e.target.closest('[data-rm]');if(r){MAN=MAN.filter(function(x){return x.id!==r.dataset.rm});saveMan();renderMan()}if(e.target.closest('[data-fav]'))setTimeout(renderMan,0)});
 var AZ={a:null,items:[]},LIBL=[],LIBU=[],CP={im:null,sel:null,sc:1,asp:0,mode:null,o:null,item:null},DBP=null;
 function novoId(){return 'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 function db(){return DBP||(DBP=new Promise(function(ok,no){try{var r=indexedDB.open('np_db',1);r.onupgradeneeded=function(){r.result.createObjectStore('cr',{keyPath:'id'})};r.onsuccess=function(){ok(r.result)};r.onerror=function(){no(r.error)}}catch(e){no(e)}}))}
@@ -519,16 +336,19 @@ function azRender(a){var t=first(a.ad_creative_bodies),h=hookOf(t),of=ofertaOf(t
  +'<div class="panel"><h2>A. Diagnóstico do anúncio</h2><div class="meta" style="margin:8px 0"><span>Potencial de escala (estimativa)</span><b style="color:var(--g)">'+pot+'</b></div><div class="meta"><span>Nota de qualidade criativa</span><b>'+(ins?'Dados insuficientes':pct(q))+'</b></div>'
  +(ins?'<p class="pg-sub">Cole um texto com ao menos 20 caracteres para avaliar.</p>':crit('Gancho inicial ('+nivel(h.n)+')',h)+crit('Qualidade da oferta',of)+crit('Clareza da chamada para ação',ct)+crit('Clareza do texto',cl)+'<p class="note" style="text-align:left">Gancho analisado: “'+esc(h.p)+'”</p>'+lista('Pontos fortes',ok)+lista('Pontos fracos',fl)+lista('O que melhorar para aumentar conversões',tp)+(fg.length?lista('Atenção às políticas',fg):''))
  +'<p class="note" style="text-align:left">Análise por regras aplicadas ao texto, não por IA. O app não analisa o conteúdo visual do criativo. Não é prova de rentabilidade.</p></div>'
- +'<div class="panel"><h2>B. Criativo original do anúncio</h2><div id="az-gal"></div></div>'
+ +'<div class="panel"><h2>B. Criativo original do anúncio</h2><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"><a class="btn o s" href="'+LIB+a.id+'" target="_blank" rel="noopener noreferrer">Abrir anúncio na Biblioteca</a><button class="btn o s" onclick="azColar()">Colar imagem copiada</button></div><div id="az-gal"></div></div>'
  +'<div class="panel"><h2>C. Análise de escalabilidade</h2><div class="meta" style="margin:8px 0"><span>Conclusão</span><b style="color:var(--g)">'+con+'</b></div>'+C.map(function(c){return '<div class="field"><div>'+c[0]+'<small>'+c[2]+'</small></div><span class="badge">'+c[1]+'</span></div>'}).join('')+(lk?'<div style="margin-top:10px">'+lk+'</div>':'')+'<p class="note" style="text-align:left">Estimativa. Sem dados reais de desempenho, nenhum anúncio pode ser chamado de escalado: tempo no ar, curtidas e criativo chamativo não comprovam lucro.</p></div>'
  +'<div class="panel"><h2>D. Dados de desempenho</h2>'+(tem?'<p class="pg-sub">Informados por você ('+(P.orig==='relatorio'?'relatório da plataforma':'declarados, não verificados')+').</p>'+rows.map(function(r){return '<div class="field"><div>'+r[0]+'</div><b>'+(r[1]==null?'Não disponível':r[2](r[1]))+'</b></div>'}).join('')+'<p class="note" style="text-align:left">ROI = (receita − custos) ÷ custos × 100, com custos = investimento + outros custos. ROAS é outra medida: receita ÷ investimento.</p>':'<p class="pg-sub">Não foi possível confirmar o desempenho real: nenhum dado foi informado. A Meta não publica investimento, alcance, CTR ou vendas de anúncios comerciais.</p>')+'</div>'
  +'<p class="note">Analisado em '+(a._pesq||'')+'</p>'}
-function azGal(){var g=$('az-gal');if(!g)return;g.innerHTML=AZ.items.length?AZ.items.map(function(it,i){var m=it.tipo.indexOf('video')===0?'<video class="az-img" src="'+it.url+'" controls playsinline preload="metadata"></video>':'<img class="az-img" src="'+it.url+'" alt="Criativo do anúncio">';return '<div style="margin-bottom:16px">'+m+'<div class="meta" style="margin:6px 0"><span>'+esc(it.nome)+'</span></div><div style="display:flex;gap:8px;flex-wrap:wrap">'+(it.salvo?'<button class="btn s" disabled style="opacity:.55">Salvo</button>':'<button class="btn s" data-azs="'+i+'">Salvar criativo</button>')+(it.tipo.indexOf('image')===0?'<button class="btn o s" data-azc="'+i+'">Recortar criativo</button>':'')+'<a class="btn o s" href="'+it.url+'" download="'+esc(it.nome)+'">Baixar</a></div></div>'}).join(''):'<div class="empty"><b>Nenhum criativo disponível</b>O app não consegue baixar o criativo pela URL da Meta. Salve a imagem ou o vídeo do anúncio no celular e envie no campo "Criativo".</div>'}
+function azGal(){var g=$('az-gal');if(!g)return;g.innerHTML=AZ.items.length?AZ.items.map(function(it,i){var m=it.tipo.indexOf('video')===0?'<video class="az-img" src="'+it.url+'" controls playsinline preload="metadata"></video>':'<img class="az-img" src="'+it.url+'" alt="Criativo do anúncio">';return '<div style="margin-bottom:16px">'+m+'<div class="meta" style="margin:6px 0"><span>'+esc(it.nome)+'</span></div><div style="display:flex;gap:8px;flex-wrap:wrap">'+(it.salvo?'<button class="btn s" disabled style="opacity:.55">Salvo</button>':'<button class="btn s" data-azs="'+i+'">Salvar criativo</button>')+(it.tipo.indexOf('image')===0?'<button class="btn o s" data-azc="'+i+'">Recortar criativo</button>':'')+'<a class="btn o s" href="'+it.url+'" download="'+esc(it.nome)+'">Baixar</a></div></div>'}).join(''):'<div class="empty"><b>Nenhum criativo adicionado</b>O app não consegue baixar o criativo pela URL da Meta. Toque em "Abrir anúncio na Biblioteca", segure o dedo sobre a imagem e escolha "Copiar imagem" (ou "Baixar imagem"). Volte aqui e toque em "Colar imagem copiada" (ou envie o arquivo no campo "Criativo").</div>'}
 function toItem(c){return {blob:c.blob,nome:c.nome,tipo:c.tipo,url:URL.createObjectURL(c.blob),salvo:true,dbId:c.id}}
 function azCarregar(id){AZ.items.forEach(function(x){if(x.salvo)URL.revokeObjectURL(x.url)});AZ.items=AZ.items.filter(function(x){return !x.salvo});azGal();dbAll().then(function(l){AZ.items=AZ.items.concat(l.filter(function(c){return c.adId===id}).map(toItem));azGal()}).catch(function(){})}
 function azArq(el){var m=$('az-msg'),er=[],ok=0;Array.prototype.slice.call(el.files).forEach(function(x){if(!/^(image|video)\//.test(x.type)){er.push(x.name+': tipo não aceito');return}if(x.size>30e6){er.push(x.name+': maior que 30 MB');return}if(AZ.items.length>=8){er.push('Máximo de 8 criativos');return}AZ.items.push({blob:x,nome:x.name,tipo:x.type,url:URL.createObjectURL(x),salvo:false});ok++});el.value='';$('az-sel').textContent=ok?ok+' arquivo(s) adicionado(s). Toque em "Analisar anúncio" para ver a prévia.':'';m.innerHTML=er.length?'<div class="err" role="alert">'+esc(er.join('; '))+'</div>':'';azGal()}
+function azColar(){var m=$('az-msg');if(!navigator.clipboard||!navigator.clipboard.read){m.innerHTML='<div class="err" role="alert">Este navegador não permite colar imagens. Use o campo "Criativo" para enviar o arquivo.</div>';return}
+ navigator.clipboard.read().then(function(its){var achou=false,ps=[];its.forEach(function(it){var ty=it.types.filter(function(x){return x.indexOf('image/')===0})[0];if(!ty)return;achou=true;ps.push(it.getType(ty).then(function(b){if(b.size>30e6)throw new Error('grande');if(AZ.items.length>=8)throw new Error('max');var ex=ty.split('/')[1].replace('jpeg','jpg').replace(/[^a-z0-9]/g,'');AZ.items.push({blob:b,nome:'criativo-colado-'+Date.now().toString(36)+'.'+ex,tipo:ty,url:URL.createObjectURL(b),salvo:false})}))});
+  if(!achou){m.innerHTML='<div class="err" role="alert">Não há imagem copiada. Abra o anúncio, segure o dedo sobre a imagem e escolha "Copiar imagem".</div>';return}
+  return Promise.all(ps).then(function(){m.innerHTML='';azGal()})}).catch(function(e){m.innerHTML='<div class="err" role="alert">'+(e&&e.message==='grande'?'A imagem passa de 30 MB.':e&&e.message==='max'?'Máximo de 8 criativos.':'Não foi possível ler a área de transferência. Permita o acesso quando o navegador perguntar, ou envie o arquivo no campo "Criativo".')+'</div>'})}
 function azSalvar(i){var it=AZ.items[i];if(!it||it.salvo)return;var rec={id:novoId(),adId:AZ.a?AZ.a.id:'',nome:it.nome,tipo:it.tipo,blob:it.blob,criado:Date.now(),origem:'original'};dbPut(rec).then(function(){it.salvo=true;it.dbId=rec.id;azGal();azBib()}).catch(function(){$('az-msg').innerHTML='<div class="err" role="alert">Não foi possível salvar: armazenamento indisponível ou cheio.</div>'})}
-function azBib(){var b=$('az-lib');if(!b)return;dbAll().then(function(l){LIBU.forEach(function(u){URL.revokeObjectURL(u)});LIBU=[];l.sort(function(x,y){return y.criado-x.criado});LIBL=l;b.innerHTML=l.length?'<div class="ads">'+l.map(function(c){var u=URL.createObjectURL(c.blob);LIBU.push(u);c._u=u;var th=c.tipo.indexOf('video')===0?'<video class="az-img" src="'+u+'" muted playsinline preload="metadata"></video>':'<img class="az-img" src="'+u+'" alt="">';return '<div class="ad"><div class="ab">'+th+'<b style="font-size:13px">'+esc(c.nome)+'</b><div class="meta"><span>'+new Date(c.criado).toLocaleDateString('pt-BR')+'</span><span>'+(c.origem==='recorte'?'Recorte':'Original')+'</span></div><div style="display:flex;gap:6px;flex-wrap:wrap"><a class="btn o s" href="'+u+'" download="'+esc(c.nome)+'">Baixar</a>'+(c.tipo.indexOf('image')===0?'<button class="btn o s" data-azlc="'+c.id+'">Recortar</button>':'')+'<button class="btn o s" data-azlr="'+c.id+'">Remover</button></div></div></div>'}).join('')+'</div>':'<div class="empty"><b>Biblioteca vazia</b>Os criativos que você salvar aparecem aqui.</div>'}).catch(function(){b.innerHTML='<div class="empty">Armazenamento indisponível neste navegador.</div>'})}
 function azFill(a){var s=function(i,x){$(i).value=x==null?'':x},p=a._pf||{};s('az-url',LIB+a.id);s('az-txt',first(a.ad_creative_bodies));s('az-an',a.page_name);s('az-tit',first(a.ad_creative_link_titles));s('az-dom',first(a.ad_creative_link_captions));s('az-niche',a._cat||'');s('az-ds',(a.ad_delivery_start_time||'').slice(0,10));s('az-df',(a.ad_delivery_stop_time||'').slice(0,10));s('az-g',a._g);s('az-na',a._n);['inv','imp','alc','clk','cnv','rec','out'].forEach(function(k){s('az-'+k,p[k])});s('az-orig',p.orig||'declarado')}
 function analisar(id){var a=ADS[id];if(!a)return;AZ.items.forEach(function(x){URL.revokeObjectURL(x.url)});AZ.items=[];go('analise');azFill(a);azRodar()}
 function azRodar(){var m=$('az-msg'),r=idDoLink($('az-url').value),t=$('az-txt').value.trim(),ds=v('az-ds'),df=v('az-df'),g=v('az-g'),n=v('az-na'),err=r.erro||(!t?'Cole o texto do anúncio. Sem ele não há o que analisar.':''),N={},pf={};
@@ -540,8 +360,7 @@ function azRodar(){var m=$('az-msg'),r=idDoLink($('az-url').value),t=$('az-txt')
  if(!err&&((g&&!(+g>=1&&+g<=999&&Math.floor(+g)===+g))||(n&&!(+n>=1&&+n<=9999&&Math.floor(+n)===+n))))err='Use números inteiros positivos nos campos de quantidade.';
  if(err){m.innerHTML='<div class="err" role="alert">'+esc(err)+'</div>';return}
  m.innerHTML='';
- var tt=v('az-tit').trim(),dm=v('az-dom').trim(),a=Object.assign({},ADS[r.id]||{},{id:r.id,page_name:v('az-an').trim().slice(0,120),ad_creative_bodies:[t.slice(0,3000)],ad_creative_link_titles:tt?[tt.slice(0,200)]:[],ad_creative_link_captions:dm?[dm.slice(0,200)]:[],ad_delivery_start_time:ds||null,ad_delivery_stop_time:df||null,_cat:v('az-niche'),_g:g?+g:null,_n:n?+n:null,_pesq:new Date().toLocaleDateString('pt-BR'),_manual:true,_pf:Object.assign(pf,{orig:v('az-orig')}),_pfn:Object.assign(N,{orig:v('az-orig')})}),f0=favs.filter(function(x){return String(x.id)===a.id})[0];
- if(f0){a._salvo=f0._salvo;a._nota=f0._nota;favs=favs.map(function(x){return String(x.id)===a.id?a:x});saveFavs()}
+ var tt=v('az-tit').trim(),dm=v('az-dom').trim(),a=Object.assign({},ADS[r.id]||{},{id:r.id,page_name:v('az-an').trim().slice(0,120),ad_creative_bodies:[t.slice(0,3000)],ad_creative_link_titles:tt?[tt.slice(0,200)]:[],ad_creative_link_captions:dm?[dm.slice(0,200)]:[],ad_delivery_start_time:ds||null,ad_delivery_stop_time:df||null,_cat:v('az-niche'),_g:g?+g:null,_n:n?+n:null,_pesq:new Date().toLocaleDateString('pt-BR'),_manual:true,_pf:Object.assign(pf,{orig:v('az-orig')}),_pfn:Object.assign(N,{orig:v('az-orig')})});
  a._s=scoreAd(a);ADS[a.id]=a;MAN=MAN.filter(function(x){return x.id!==a.id});MAN.unshift(a);MAN=MAN.slice(0,100);saveMan();renderMan();
  AZ.a=a;azRender(a);azCarregar(a.id);azGal();var res=$('az-res');if(res.scrollIntoView)res.scrollIntoView({behavior:'smooth',block:'start'})}
 function azInit(){var n=$('az-niche');if(n)n.innerHTML='<option value="">Sem categoria</option>'+CATS.slice(1).map(function(c){return opt(c)}).join('');
@@ -560,7 +379,156 @@ function cropBlob(cb){var s=CP.sel;if(!s||s.w<12||s.h<12){$('cvmsg').textContent
 function cropNome(){return String(CP.item&&CP.item.nome||'criativo').replace(/\.[^.]+$/,'')+'-recorte.png'}
 function cropSalvar(){cropBlob(function(b){var rec={id:novoId(),adId:(CP.item&&CP.item.adId)||(AZ.a?AZ.a.id:''),nome:cropNome(),tipo:'image/png',blob:b,criado:Date.now(),origem:'recorte'};dbPut(rec).then(function(){if(AZ.a&&rec.adId===AZ.a.id)AZ.items.push(toItem(rec));azGal();azBib();cropFechar()}).catch(function(){$('cvmsg').textContent='Não foi possível salvar: armazenamento indisponível ou cheio.'})})}
 function cropBaixar(){cropBlob(function(b){var u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=cropNome();document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},3000)})}
-loadFavs();chips();render();$('ep').value=EP;badge();$('fcat').innerHTML='<option value="">Todas as categorias</option>'+CATS.slice(1).map(function(c){return opt(c)}).join('');renderFavs();destaques();loadImp();initRadar();loadMan();initMan();azInit();
+// ================= Navegação e utilidades =================
+function toast(m){var t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(function(){t.style.display='none'},4500)}
+function go(id){document.querySelectorAll('.page').forEach(function(p){p.classList.toggle('on',p.id===id)});document.querySelectorAll('nav button').forEach(function(b){b.classList.toggle('on',b.dataset.go===id)});window.scrollTo(0,0);if(id==='videos')setTimeout(azBib,0)}
+function renderMan(){var b=$('minhas');if(!b)return;b.innerHTML=MAN.length?'<div class="sec"><h3>Meus anúncios analisados</h3><span class="badge">dados informados por você</span></div>'+MAN.map(function(a){var s=a._s;return '<div class="panel" style="padding:12px"><b>'+esc(String(first(a.ad_creative_link_titles)||a.page_name||'Anúncio '+a.id))+'</b><div class="meta" style="margin:6px 0"><span>'+esc(a.page_name||'Anunciante não informado')+'</span><span>'+(s&&s.total!=null?s.total+'/100':'Dados insuficientes')+'</span></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn s" data-an="'+a.id+'">Ver análise</button><a class="btn o s" href="'+LIB+a.id+'" target="_blank" rel="noopener noreferrer">Anúncio original</a><button class="btn o s" data-rm="'+a.id+'">Remover</button></div></div>'}).join(''):''}
+function procurar(e){if(e)e.preventDefault();var q=$('pr-q').value.replace(/\s+/g,' ').trim(),m=$('pr-msg');
+ if(q.length<2||q.length>100){m.innerHTML='<div class="err" role="alert">Digite de 2 a 100 caracteres.</div>';return}
+ var u='https://www.facebook.com/ads/library/?active_status='+$('pr-st').value+'&ad_type=all&country='+$('pr-pais').value+'&media_type='+$('pr-md').value+'&search_type='+($('pr-ex').checked?'keyword_exact_phrase':'keyword_unordered')+'&q='+encodeURIComponent(q);
+ var a=document.createElement('a');a.href=u;a.target='_blank';a.rel='noopener noreferrer';document.body.appendChild(a);a.click();a.remove();
+ m.innerHTML='<a class="btn o s" href="'+u+'" target="_blank" rel="noopener noreferrer">Se não abriu, toque aqui</a>'}
+function vfSet(x){VF=x;var n={video:0,image:1,todos:2}[x];document.querySelectorAll('#az-vf .chip').forEach(function(c,i){c.classList.toggle('on',i===n)});azBib()}
+var VF='video';
+function azBib(){var b=$('az-lib');if(!b)return;dbAll().then(function(l){LIBU.forEach(function(u){URL.revokeObjectURL(u)});LIBU=[];l.sort(function(x,y){return y.criado-x.criado});LIBL=l;var f=l.filter(function(c){return VF==='todos'||c.tipo.indexOf(VF)===0});
+ b.innerHTML=f.length?'<div class="ads">'+f.map(function(c){var u=URL.createObjectURL(c.blob);LIBU.push(u);c._u=u;var th=c.tipo.indexOf('video')===0?'<video class="az-img" src="'+u+'" controls playsinline preload="metadata"></video>':'<img class="az-img" src="'+u+'" alt="">';return '<div class="ad"><div class="ab">'+th+'<b style="font-size:13px">'+esc(c.nome)+'</b><div class="meta"><span>'+new Date(c.criado).toLocaleDateString('pt-BR')+' · '+((c.blob.size/1048576).toFixed(1).replace('.',','))+' MB</span><span>'+(c.origem==='recorte'?'Recorte':c.origem==='editado'?'Editado':'Original')+'</span></div><div style="display:flex;gap:6px;flex-wrap:wrap"><a class="btn o s" href="'+u+'" download="'+esc(c.nome)+'">Baixar</a>'+(c.tipo.indexOf('image')===0?'<button class="btn o s" data-azlc="'+c.id+'">Recortar</button>':'')+'<button class="btn o s" data-azlr="'+c.id+'">Remover</button></div></div></div>'}).join('')+'</div>':'<div class="empty"><b>Nada por aqui</b>'+(VF==='video'?'Os vídeos que você exportar ou salvar aparecem aqui.':'Os itens que você salvar aparecem aqui.')+'</div>'}).catch(function(){b.innerHTML='<div class="empty">Armazenamento indisponível neste navegador.</div>'})}
+
+// ================= Editor de vídeo (FFmpeg.wasm, grátis, no aparelho) =================
+var CORE_BASES=['https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/','https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd/'];
+var MAX_MB=150,MAX_CLIP=120;
+var VE={file:null,url:null,w:0,h:0,dur:0,fmt:'orig',fit:'fill',sub:[],wk:null,ready:false,pend:null,logs:[],busy:false,outUrl:null,capCache:{}};
+function ffWorker(){var core=null;
+ function post(m,t){self.postMessage(m,t||[])}
+ async function load(d){var wasm=null,c=null;
+  try{c=await caches.open('np-ffmpeg-v1');var hit=await c.match(d.wasm);if(hit){wasm=await hit.arrayBuffer();post({t:'dl',p:1,got:wasm.byteLength,cache:true})}}catch(e){}
+  if(!wasm){var r=await fetch(d.wasm);if(!r.ok)throw new Error('Falha ao baixar o FFmpeg (código '+r.status+').');
+   var tot=+r.headers.get('content-length')||31e6,rd=r.body.getReader(),ch=[],got=0;
+   for(;;){var x=await rd.read();if(x.done)break;ch.push(x.value);got+=x.value.length;post({t:'dl',p:Math.min(0.99,got/tot),got:got})}
+   var buf=new Uint8Array(got),o=0;ch.forEach(function(a){buf.set(a,o);o+=a.length});wasm=buf.buffer;
+   try{if(c)await c.put(d.wasm,new Response(wasm.slice(0),{headers:{'content-type':'application/wasm'}}))}catch(e){}}
+  importScripts(d.js);
+  if(!self.createFFmpegCore)throw new Error('O núcleo do FFmpeg não carregou.');
+  core=await self.createFFmpegCore({wasmBinary:wasm,mainScriptUrlOrBlob:d.js+'#'+btoa(JSON.stringify({wasmURL:d.wasm,workerURL:d.js.replace(/\.js$/,'.worker.js')}))});
+  core.setLogger(function(m){post({t:'log',m:(m&&m.message!=null)?m.message:String(m)})});
+  core.setProgress(function(p){post({t:'prog',p:p&&p.progress,time:p&&p.time})});
+  post({t:'ready'})}
+ function run(d){var out=null;
+  try{d.files.forEach(function(f){core.FS.writeFile(f.name,new Uint8Array(f.buf))});
+   core.setTimeout(-1);core.exec.apply(core,d.args);var ret=core.ret;core.reset();
+   if(ret!==0)throw new Error('O FFmpeg terminou com erro (código '+ret+').');
+   if(d.out){out=core.FS.readFile(d.out);if(!out||!out.length)throw new Error('O FFmpeg não gerou o arquivo de saída.')}}
+  finally{d.files.forEach(function(f){try{core.FS.unlink(f.name)}catch(e){}});if(d.out){try{core.FS.unlink(d.out)}catch(e){}}}
+  if(out){var b=out.buffer.slice(out.byteOffset,out.byteOffset+out.byteLength);post({t:'done',data:b},[b])}else post({t:'done'})}
+ self.onmessage=function(e){var d=e.data;(async function(){try{if(d.t==='load')await load(d);else if(d.t==='run')run(d)}catch(err){post({t:'err',m:String(err&&err.message||err)})}})()}}
+function veWorker(){if(VE.wk)return VE.wk;var u=URL.createObjectURL(new Blob(['('+ffWorker.toString()+')()'],{type:'text/javascript'}));var w=new Worker(u);w.onmessage=veMsg;w.onerror=function(e){if(VE.pend){var p=VE.pend;VE.pend=null;p.rej(new Error(e.message||'Erro no processador de vídeo.'))}};VE.wk=w;return w}
+function veSend(msg,tr,on){return new Promise(function(res,rej){VE.pend={res:res,rej:rej,on:on};veWorker().postMessage(msg,tr||[])})}
+function veMsg(e){var m=e.data,p=VE.pend;if(!p)return;if(m.t==='ready'||m.t==='done'){VE.pend=null;p.res(m)}else if(m.t==='err'){VE.pend=null;p.rej(new Error(m.m))}else{if(m.t==='log'){VE.logs.push(m.m);if(VE.logs.length>300)VE.logs.shift()}if(p.on)p.on(m)}}
+function veStage(txt,pct){$('ve-prog').style.display='block';$('ve-st').textContent=txt;$('ve-pc').textContent=pct==null?'':Math.round(pct*100)+'%';$('ve-pb').style.width=(pct==null?0:Math.round(pct*100))+'%'}
+async function veLoad(){if(VE.ready)return;var ult=null;
+ for(var i=0;i<CORE_BASES.length;i++){var b=CORE_BASES[i];
+  try{veStage('Baixando o FFmpeg…',0);
+   await veSend({t:'load',js:b+'ffmpeg-core.js',wasm:b+'ffmpeg-core.wasm'},[],function(m){if(m.t==='dl')veStage(m.cache?'Carregando o FFmpeg guardado…':'Baixando o FFmpeg: '+(m.got/1048576).toFixed(1).replace('.',',')+' MB',m.p)});
+   VE.ready=true;return}
+  catch(e){ult=e;if(VE.wk){VE.wk.terminate();VE.wk=null}VE.pend=null}}
+ throw new Error('Não foi possível carregar o FFmpeg. Confira a internet (o download é feito uma vez) e tente de novo. Detalhe: '+(ult&&ult.message||'desconhecido'))}
+function veCancel(){if(VE.wk){VE.wk.terminate();VE.wk=null}VE.ready=false;if(VE.pend){var p=VE.pend;VE.pend=null;p.rej(new Error('cancelado'))}}
+function ev2(x){x=Math.round(x);return x-(x%2)}
+function fmtT(s){s=Math.max(0,s);var m=Math.floor(s/60),r=s-m*60;return m+':'+(r<10?'0':'')+r.toFixed(1)}
+function veGeo(){var V=VE,pc=function(i){return (+$(i).value||0)/100},t=pc('ve-ct'),b=pc('ve-cb'),l=pc('ve-cl'),r=pc('ve-cr');
+ var cx=ev2(V.w*l),cy=ev2(V.h*t),cw=Math.max(16,ev2(V.w*(1-l-r))),ch=Math.max(16,ev2(V.h*(1-t-b)));
+ if(cx+cw>V.w)cw=ev2(V.w-cx);if(cy+ch>V.h)ch=ev2(V.h-cy);
+ var s=$('ve-q').value==='r'?540:720,W,H;
+ if(V.fmt==='916'){W=s;H=s*16/9}else if(V.fmt==='11'){W=s;H=s}else if(V.fmt==='169'){W=s*16/9;H=s}else{var sh=Math.min(cw,ch),k=Math.min(1,s/sh);W=cw*k;H=ch*k}
+ return {cx:cx,cy:cy,cw:cw,ch:ch,W:ev2(W),H:ev2(H)}}
+function capRender(txt,W,H,size,pos){var Hc=ev2(Math.round(H*0.3)),c=document.createElement('canvas'),fs=Math.max(14,Math.round(size)),x;
+ c.width=W;c.height=Hc;x=c.getContext('2d');x.font='bold '+fs+'px Arial, Helvetica, sans-serif';x.textAlign='center';x.textBaseline='alphabetic';x.lineJoin='round';
+ var words=String(txt).split(/\s+/),lines=[],cur='',mw=W*0.9;
+ words.forEach(function(w){var t=cur?cur+' '+w:w;if(x.measureText(t).width>mw&&cur){lines.push(cur);cur=w}else cur=t});if(cur)lines.push(cur);lines=lines.slice(0,3);
+ var lh=fs*1.25,y0=pos==='m'?(Hc-lines.length*lh)/2+fs:Hc-fs*0.35-(lines.length-1)*lh;
+ lines.forEach(function(ln,i){var y=y0+i*lh;x.lineWidth=fs*0.22;x.strokeStyle='#000';x.strokeText(ln,W/2,y);x.fillStyle='#fff';x.fillText(ln,W/2,y)});
+ return c}
+function veSubOk(){var d=+$('ve-e').value-(+$('ve-s').value);return VE.sub.filter(function(s){return s.t&&s.t.trim()&&+s.e>+s.s})}
+function veUpd(){if(!VE.file)return;var s=+$('ve-s').value,e=+$('ve-e').value,m='';
+ if(isNaN(s)||isNaN(e))m='Informe o início e o fim em segundos.';else if(s<0||e>VE.dur+0.05)m='O corte precisa ficar dentro da duração do vídeo.';else if(e-s<0.5)m='O trecho precisa ter ao menos 0,5 s.';else if(e-s>MAX_CLIP)m='O trecho passa de '+MAX_CLIP+' s (limite para o celular).';
+ $('ve-clip').textContent=m||('Trecho de '+(e-s).toFixed(1).replace('.',',')+' s (de '+VE.dur.toFixed(1).replace('.',',')+' s).');$('ve-clip').style.color=m?'#ff8a8a':'';
+ $('ve-vl').textContent=$('ve-vol').value+'%';var g=veGeo();$('ve-fm').textContent='Saída: '+g.W+'×'+g.H;
+ var v=$('ve-v');v.volume=Math.min(1,$('ve-vol').value/100);v.muted=$('ve-mute').checked;VE.capCache={};veDraw()}
+function veDraw(){var V=VE,v=$('ve-v'),c=$('ve-cv');if(!V.file||!v.videoWidth)return;var g=veGeo(),x=c.getContext('2d'),k=Math.min((c.parentNode.clientWidth||340)/g.W,420/g.W,(innerHeight*0.55)/g.H);
+ c.width=Math.round(g.W*k);c.height=Math.round(g.H*k);x.fillStyle='#000';x.fillRect(0,0,c.width,c.height);
+ var sc=(V.fit==='fit'&&V.fmt!=='orig')?Math.min(g.W/g.cw,g.H/g.ch):Math.max(g.W/g.cw,g.H/g.ch),sw=g.cw*sc,sh=g.ch*sc;
+ try{x.drawImage(v,g.cx,g.cy,g.cw,g.ch,(g.W-sw)/2*k,(g.H-sh)/2*k,sw*k,sh*k)}catch(e){}
+ var t=v.currentTime,size=g.H*(+$('ve-ss').value),pos=$('ve-sp').value;
+ veSubOk().forEach(function(s,i){if(t>=+s.s&&t<=+s.e){var kk=s.t+'|'+g.W+'|'+size+'|'+pos,cv=VE.capCache[kk]||(VE.capCache[kk]=capRender(s.t,g.W,g.H,size,pos)),Hc=cv.height,y=pos==='m'?(g.H-Hc)/2:g.H-Hc-g.H*0.08;x.drawImage(cv,0,y*k,cv.width*k,Hc*k)}});
+ $('ve-tm').textContent=fmtT(t)}
+function veLoop(){var v=$('ve-v');if(!VE.file)return;if(!v.paused){var e=+$('ve-e').value;if(v.currentTime>=e-0.03){v.pause();v.currentTime=+$('ve-s').value;$('ve-play').textContent='Tocar'}veDraw();requestAnimationFrame(veLoop)}}
+function vePlay(){var v=$('ve-v'),s=+$('ve-s').value,e=+$('ve-e').value;if(v.paused){if(v.currentTime<s||v.currentTime>=e-0.05)v.currentTime=s;v.play().then(function(){$('ve-play').textContent='Pausar';requestAnimationFrame(veLoop)}).catch(function(){toast('Não foi possível tocar este vídeo.')})}else{v.pause();$('ve-play').textContent='Tocar'}}
+function veIr(t){var v=$('ve-v');v.currentTime=t===0?(+$('ve-s').value||0):t}
+function veMarca(id){$(id).value=$('ve-v').currentTime.toFixed(1);veUpd()}
+function veEscolher(el){var f=el.files[0],m=$('ve-info');if(!f)return;
+ if(!/^video\//.test(f.type)&&!/\.(mp4|mov|webm|mkv|3gp)$/i.test(f.name)){m.innerHTML='<div class="err" role="alert">Escolha um arquivo de vídeo.</div>';return}
+ if(f.size>MAX_MB*1048576){m.innerHTML='<div class="err" role="alert">O arquivo tem '+(f.size/1048576).toFixed(0)+' MB. O limite é '+MAX_MB+' MB. Corte a gravação na galeria e tente de novo.</div>';return}
+ if(VE.url)URL.revokeObjectURL(VE.url);var v=$('ve-v');VE.file=null;VE.url=URL.createObjectURL(f);m.textContent='Lendo o vídeo…';
+ v.onloadedmetadata=function(){if(!v.videoWidth||!isFinite(v.duration)){m.innerHTML='<div class="err" role="alert">Este navegador não conseguiu ler o vídeo. Tente um MP4 gravado pelo celular.</div>';return}
+  VE.file=f;VE.w=v.videoWidth;VE.h=v.videoHeight;VE.dur=v.duration;VE.sub=[];VE.fmt='orig';VE.fit='fill';
+  ['ve-ct','ve-cb','ve-cl','ve-cr'].forEach(function(i){$(i).value=0});$('ve-s').value='0';$('ve-e').value=Math.min(v.duration,MAX_CLIP).toFixed(1);$('ve-cmsg').textContent='';$('ve-out').innerHTML='';$('ve-msg').innerHTML='';$('ve-prog').style.display='none';
+  m.textContent=f.name+' · '+(f.size/1048576).toFixed(1).replace('.',',')+' MB · '+v.duration.toFixed(1).replace('.',',')+' s · '+v.videoWidth+'×'+v.videoHeight+'. O original não será alterado.';
+  $('ve-ed').style.display='block';veOpts();veSubUi();v.currentTime=0.01;veUpd()};
+ v.onseeked=function(){veDraw()};v.onerror=function(){m.innerHTML='<div class="err" role="alert">Este navegador não conseguiu abrir o vídeo.</div>'};v.src=VE.url;v.load()}
+function veOpts(){var F=[['orig','Original'],['916','9:16'],['11','1:1'],['169','16:9']],A=[['fill','Preencher (corta o excesso)'],['fit','Ajustar (barras pretas)']];
+ $('ve-fmts').innerHTML=F.map(function(f){return '<button class="chip'+(VE.fmt===f[0]?' on':'')+'" onclick="VE.fmt=\''+f[0]+'\';veOpts();veUpd()">'+f[1]+'</button>'}).join('');
+ $('ve-fits').innerHTML=VE.fmt==='orig'?'':A.map(function(f){return '<button class="chip'+(VE.fit===f[0]?' on':'')+'" onclick="VE.fit=\''+f[0]+'\';veOpts();veUpd()">'+f[1]+'</button>'}).join('')}
+function veSubUi(){$('ve-subs').innerHTML=VE.sub.map(function(s,i){return '<div class="panel" style="padding:10px;margin-bottom:8px"><input class="inp" maxlength="120" style="max-width:100%;width:100%;margin-bottom:6px" placeholder="Texto da legenda" value="'+esc(s.t)+'" oninput="VE.sub['+i+'].t=this.value;VE.capCache={};veDraw()"><div style="display:flex;gap:6px;align-items:center"><input class="inp" type="number" step="0.1" min="0" style="max-width:90px" value="'+s.s+'" oninput="VE.sub['+i+'].s=+this.value;veDraw()"><span>até</span><input class="inp" type="number" step="0.1" min="0" style="max-width:90px" value="'+s.e+'" oninput="VE.sub['+i+'].e=+this.value;veDraw()"><button class="btn o s" onclick="VE.sub.splice('+i+',1);veSubUi();veDraw()">Remover</button></div></div>'}).join('')}
+function veSubAdd(){if(VE.sub.length>=12){toast('Máximo de 12 legendas.');return}var t=+($('ve-v').currentTime||+$('ve-s').value||0).toFixed(1);VE.sub.push({t:'',s:t,e:+(t+2).toFixed(1)});veSubUi()}
+function veBuildArgs(){var g=veGeo(),S=+$('ve-s').value,E=+$('ve-e').value,D=+(E-S).toFixed(2),rap=$('ve-q').value==='r',caps=[],args=['-ss',String(S),'-i','in'];
+ var vf='crop='+g.cw+':'+g.ch+':'+g.cx+':'+g.cy+',';
+ if(VE.fmt==='orig')vf+='scale='+g.W+':'+g.H;
+ else if(VE.fit==='fit')vf+='scale='+g.W+':'+g.H+':force_original_aspect_ratio=decrease,pad='+g.W+':'+g.H+':(ow-iw)/2:(oh-ih)/2:color=black';
+ else vf+='scale='+g.W+':'+g.H+':force_original_aspect_ratio=increase,crop='+g.W+':'+g.H;
+ vf+=',setsar=1';
+ var size=g.H*(+$('ve-ss').value),pos=$('ve-sp').value,fc=null;
+ veSubOk().filter(function(s){return +s.e>S&&+s.s<E}).forEach(function(s,i){var cv=capRender(s.t,g.W,g.H,size,pos);caps.push({name:'cap'+i+'.png',canvas:cv,s:Math.max(0,+s.s-S),e:Math.min(D,+s.e-S)});args.push('-loop','1','-t',String(D),'-i','cap'+i+'.png')});
+ if(caps.length){fc='[0:v]'+vf+'[b0]';caps.forEach(function(c,i){var y=pos==='m'?'(H-h)/2':'H-h-'+Math.round(g.H*0.08),last=i===caps.length-1;fc+=';[b'+i+']['+(i+1)+':v]overlay=0:'+y+":enable='between(t,"+c.s.toFixed(2)+','+c.e.toFixed(2)+")'["+(last?'vo':'b'+(i+1))+']'})}
+ args.push('-t',String(D));
+ if(fc)args.push('-filter_complex',fc,'-map','[vo]','-map','0:a?');else args.push('-vf',vf);
+ args.push('-c:v','libx264','-preset',rap?'ultrafast':'veryfast','-crf',rap?'30':'26','-pix_fmt','yuv420p');
+ if($('ve-mute').checked)args.push('-an');else{var af=[],vol=+$('ve-vol').value;if(vol!==100)af.push('volume='+(vol/100).toFixed(2));if($('ve-norm').checked)af.push('dynaudnorm');if(af.length)args.push('-af',af.join(','));args.push('-c:a','aac','-b:a','128k')}
+ args.push('-movflags','+faststart','-y','out.mp4');return {args:args,caps:caps,D:D}}
+function veErro(e){var t=String(e&&e.message||e);if(/cancelado/.test(t))return 'Processamento cancelado.';if(/memory|Aborted|RuntimeError|alloc/i.test(t))return 'O aparelho ficou sem memória. Use um vídeo menor, o trecho mais curto ou a qualidade "Rápida".';return t}
+function veBusy(b){VE.busy=b;$('ve-go').disabled=b;$('ve-cancel').style.display=b?'inline-flex':'none'}
+function tempo(s){s=Math.round(s);return s>=60?Math.floor(s/60)+' min '+(s%60)+' s':s+' s'}
+async function veExport(){if(!VE.file||VE.busy)return;var m=$('ve-msg');m.innerHTML='';$('ve-out').innerHTML='';veUpd();
+ var s=+$('ve-s').value,e=+$('ve-e').value;if(isNaN(s)||isNaN(e)||s<0||e>VE.dur+0.05||e-s<0.5||e-s>MAX_CLIP){m.innerHTML='<div class="err" role="alert">Ajuste o corte: o trecho deve ter de 0,5 s a '+MAX_CLIP+' s e ficar dentro do vídeo.</div>';return}
+ var bad=VE.sub.filter(function(x){return (x.t||'').trim()&&!(+x.e>+x.s)});if(bad.length){m.innerHTML='<div class="err" role="alert">Há legendas com o fim antes do início.</div>';return}
+ veBusy(true);VE.logs=[];var wl=null;try{if(navigator.wakeLock)wl=await navigator.wakeLock.request('screen')}catch(x){}
+ try{var B=veBuildArgs();veStage('Lendo o arquivo…',0);var buf=await VE.file.arrayBuffer();await veLoad();
+  var files=[{name:'in',buf:buf}],tr=[buf];
+  for(var i=0;i<B.caps.length;i++){var bl=await new Promise(function(r){B.caps[i].canvas.toBlob(r,'image/png')}),ab=await bl.arrayBuffer();files.push({name:B.caps[i].name,buf:ab});tr.push(ab)}
+  var t0=Date.now(),best=0;veStage('Processando…',0);
+  var done=await veSend({t:'run',files:files,args:B.args,out:'out.mp4'},tr,function(mm){var p=null;
+   if(mm.t==='log'){var r=/time=(\d+):(\d+):(\d+(?:\.\d+)?)/.exec(mm.m);if(r)p=(+r[1]*3600+ +r[2]*60+ +r[3])/B.D}
+   else if(mm.t==='prog'&&typeof mm.time==='number'&&mm.time>0)p=mm.time/1e6/B.D;
+   if(p!=null&&isFinite(p)){best=Math.max(best,Math.min(0.99,p));var el=(Date.now()-t0)/1000;veStage('Processando… '+(best>0.03?'faltam cerca de '+tempo(el/best*(1-best)):''),best)}});
+  veStage('Finalizando…',1);
+  var blob=new Blob([done.data],{type:'video/mp4'});if(VE.outUrl)URL.revokeObjectURL(VE.outUrl);VE.outUrl=URL.createObjectURL(blob);
+  var nm=VE.file.name.replace(/\.[^.]+$/,'')+'-editado.mp4',o=VE.file.size,n=blob.size;
+  $('ve-out').innerHTML='<video class="az-img" src="'+VE.outUrl+'" controls playsinline></video><div class="meta" style="margin:8px 0"><span>'+(o/1048576).toFixed(1).replace('.',',')+' MB → '+(n/1048576).toFixed(1).replace('.',',')+' MB</span><span>'+(n<o?'−'+Math.round((1-n/o)*100)+'%':'+'+Math.round((n/o-1)*100)+'%')+'</span></div><div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn s" href="'+VE.outUrl+'" download="'+esc(nm)+'">Baixar MP4</a><button class="btn o s" onclick="veSalvar()">Salvar em Meus vídeos</button></div>';
+  VE.outBlob=blob;VE.outNome=nm;veStage('Pronto em '+tempo((Date.now()-t0)/1000),1)}
+ catch(err){var tx=veErro(err);m.innerHTML='<div class="err" role="alert">'+esc(tx)+'</div>';if(/cancelado/.test(String(err&&err.message))){veStage('Cancelado',null)}else{veStage('Falhou',null);if(VE.logs.length)m.innerHTML+='<details style="margin-top:8px;font-size:11px;color:var(--mu)"><summary>Detalhes técnicos</summary><pre style="white-space:pre-wrap">'+esc(VE.logs.slice(-12).join('\n'))+'</pre></details>'}VE.ready=VE.wk?VE.ready:false}
+ finally{veBusy(false);try{if(wl)wl.release()}catch(x){}}}
+function veSalvar(){if(!VE.outBlob)return;var rec={id:novoId(),adId:'',nome:VE.outNome,tipo:'video/mp4',blob:VE.outBlob,criado:Date.now(),origem:'editado'};dbPut(rec).then(function(){toast('Salvo em Meus vídeos.');azBib()}).catch(function(){toast('Não foi possível salvar: armazenamento indisponível ou cheio.')})}
+async function veAuto(){if(!VE.file||VE.busy)return;var m=$('ve-cmsg');m.textContent='';veBusy(true);VE.logs=[];
+ try{veStage('Lendo o arquivo…',0);var buf=await VE.file.arrayBuffer();await veLoad();veStage('Detectando bordas…',null);
+  var ss=VE.dur>2?'1':'0';await veSend({t:'run',files:[{name:'in',buf:buf}],args:['-ss',ss,'-i','in','-t','4','-an','-vf','cropdetect=limit=24:round=2:reset=0','-f','null','-'],out:null},[buf]);
+  var r=null,re=/crop=(\d+):(\d+):(\d+):(\d+)/g,x;VE.logs.join('\n').replace(re,function(a,w,h,cx,cy){r=[+w,+h,+cx,+cy];return a});
+  if(!r||(r[0]>=VE.w-2&&r[1]>=VE.h-2)){m.textContent='Nenhuma borda preta detectada. Ajuste manualmente se quiser.'}
+  else{var L=r[2],T=r[3],R=VE.w-r[2]-r[0],Bt=VE.h-r[3]-r[1],p=function(a,b){return Math.max(0,Math.min(40,a/b*100)).toFixed(1)};$('ve-cl').value=p(L,VE.w);$('ve-cr').value=p(R,VE.w);$('ve-ct').value=p(T,VE.h);$('ve-cb').value=p(Bt,VE.h);m.textContent='Bordas detectadas e aplicadas. Confira na pré-visualização.';veUpd()}
+  $('ve-prog').style.display='none'}
+ catch(err){m.innerHTML='<span style="color:#ff8a8a">'+esc(veErro(err))+'</span>';veStage('Falhou',null)}
+ finally{veBusy(false)}}
+
+document.addEventListener('click',function(e){var n=e.target.closest('nav button, .logo');if(n&&n.dataset.go)go(n.dataset.go);var x=e.target.closest('[data-an]');if(x)analisar(x.dataset.an);var r=e.target.closest('[data-rm]');if(r){MAN=MAN.filter(function(y){return y.id!==r.dataset.rm});saveMan();renderMan()}});
+loadMan();renderMan();azInit();veOpts();
+try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
 </script>
 <script>if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(function(){})</script>
 </body>
